@@ -71,7 +71,18 @@
     
     if (group == nil && albumWasFound == NO) {
       // photo albums are over, target album does not exist, thus create it
-      __weak ALAssetsLibrary * weakSelf = self;
+      
+      // Since you use the assets library inside the block,
+      //   ARC will complain on compile time that there’s a retain cycle.
+      //   When you have this – you just make a weak copy of your object.
+      //
+      //   __weak ALAssetsLibrary * weakSelf = self;
+      //
+      // by @Marin.
+      //
+      // I don't use ARC right now, and it leads a warning.
+      // by @Kjuly
+      ALAssetsLibrary * weakSelf = self;
       
       // create new assets album
       [self addAssetsGroupAlbumWithName:albumName 
