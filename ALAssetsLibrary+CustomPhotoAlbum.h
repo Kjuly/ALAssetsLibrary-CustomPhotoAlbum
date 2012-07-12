@@ -16,8 +16,4 @@ typedef void (^SaveImageCompletion)(NSError* error);
          toAlbum:(NSString *)albumName
       completion:(SaveImageCompletion)completion;
 
--(void)addAssetURL:(NSURL *)assetURL
-           toAlbum:(NSString *)albumName
-        completion:(SaveImageCompletion)completion;
-
 @end

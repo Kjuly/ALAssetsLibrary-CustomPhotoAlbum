@@ -7,7 +7,18 @@
 
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
 
+@interface ALAssetsLibrary (Private)
+
+-(void)_addAssetURL:(NSURL *)assetURL
+            toAlbum:(NSString *)albumName
+         completion:(SaveImageCompletion)completion;
+
+@end
+
+
 @implementation ALAssetsLibrary (CustomPhotoAlbum)
+
+#pragma mark - Public Method
 
 -(void)saveImage:(UIImage *)image
          toAlbum:(NSString *)albumName
@@ -23,15 +34,17 @@
                        }
                        
                        //add the asset to the custom photo album
-                       [self addAssetURL:assetURL 
-                                 toAlbum:albumName 
-                              completion:completion];
+                       [self _addAssetURL:assetURL 
+                                  toAlbum:albumName 
+                               completion:completion];
                      }];
 }
 
--(void)addAssetURL:(NSURL *)assetURL
-           toAlbum:(NSString *)albumName
-        completion:(SaveImageCompletion)completion {
+#pragma mark - Private Method
+
+-(void)_addAssetURL:(NSURL *)assetURL
+            toAlbum:(NSString *)albumName
+         completion:(SaveImageCompletion)completion {
   __block BOOL albumWasFound = NO;
   
   ALAssetsLibraryGroupsEnumerationResultsBlock enumerationBlock;
