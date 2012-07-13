@@ -4,9 +4,10 @@ ALAssetsLibrary-CustomPhotoAlbum
 A nice ALAssetsLibrary category for saving images into custom photo album by @MarinTodorov.
 
 
-       -(void)saveImage:(UIImage*)image
-                toAlbum:(NSString*)albumName
-    withCompletionBlock:(SaveImageCompletion)completionBlock;
+    -(void)saveImage:(UIImage *)image
+             toAlbum:(NSString *)albumName
+     completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+        failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
 
 
 #### REFERENCE:
