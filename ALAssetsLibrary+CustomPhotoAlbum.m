@@ -11,7 +11,7 @@
 
 -(void)_addAssetURL:(NSURL *)assetURL
             toAlbum:(NSString *)albumName
-         completion:(SaveImageCompletion)completion;
+       failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
 
 @end
 
@@ -20,23 +20,27 @@
 
 #pragma mark - Public Method
 
--(void)saveImage:(UIImage *)image
-         toAlbum:(NSString *)albumName
-      completion:(SaveImageCompletion)completion {
+- (void)saveImage:(UIImage *)image
+          toAlbum:(NSString *)albumName
+  completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
   // write the image data to the assets library (camera roll)
   [self writeImageToSavedPhotosAlbum:image.CGImage
                          orientation:(ALAssetOrientation)image.imageOrientation 
                      completionBlock:^(NSURL *assetURL, NSError *error) {
-                       //error handling
-                       if (error != nil) {
-                         completion(error);
-                         return;
-                       }
+                       // run the completion block for writing image to saved
+                       //   photos album
+                       completionBlock(assetURL, error);
                        
-                       //add the asset to the custom photo album
-                       [self _addAssetURL:assetURL 
-                                  toAlbum:albumName 
-                               completion:completion];
+                       // if an error occured, do not try to add the asset to
+                       //   the custom photo album
+                       if (error != nil)
+                         return;
+                       
+                       // add the asset to the custom photo album
+                       [self _addAssetURL:assetURL
+                                  toAlbum:albumName
+                             failureBlock:failureBlock];
                      }];
 }
 
@@ -44,7 +48,7 @@
 
 -(void)_addAssetURL:(NSURL *)assetURL
             toAlbum:(NSString *)albumName
-         completion:(SaveImageCompletion)completion {
+       failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
   __block BOOL albumWasFound = NO;
   
   ALAssetsLibraryGroupsEnumerationResultsBlock enumerationBlock;
@@ -60,10 +64,10 @@
               // add photo to the target album
               [group addAsset:asset];
               
-              // run the completion block
-              completion(nil);
+              // run the failure block
+              failureBlock(nil);
             }
-           failureBlock:completion];
+           failureBlock:failureBlock];
       
       // album was found, bail out of the method
       return;
@@ -88,17 +92,17 @@
       [self addAssetsGroupAlbumWithName:albumName 
                             resultBlock:^(ALAssetsGroup *group) {
                               // get the photo's instance
-                              [weakSelf assetForURL: assetURL 
+                              [weakSelf assetForURL:assetURL 
                                         resultBlock:^(ALAsset *asset) {
                                           // add photo to the newly created album
-                                          [group addAsset: asset];
+                                          [group addAsset:asset];
                                           
-                                          // call the completion block
-                                          completion(nil);
+                                          // call the failure block
+                                          failureBlock(nil);
                                         }
-                                       failureBlock:completion];
+                                       failureBlock:failureBlock];
                             }
-                           failureBlock:completion];
+                           failureBlock:failureBlock];
       
       // should be the last iteration anyway, but just in case
       return;
@@ -108,7 +112,7 @@
   // search all photo albums in the library
   [self enumerateGroupsWithTypes:ALAssetsGroupAlbum 
                       usingBlock:enumerationBlock
-                    failureBlock:completion];
+                    failureBlock:failureBlock];
 }
 
 @end
