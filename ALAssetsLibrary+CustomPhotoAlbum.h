@@ -8,8 +8,6 @@
 #import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
-typedef void (^SaveImageCompletion)(NSError* error);
-
 @interface ALAssetsLibrary (CustomPhotoAlbum)
 
 //           |image|: the target image to be saved

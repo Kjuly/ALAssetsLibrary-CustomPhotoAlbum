@@ -63,9 +63,6 @@
             resultBlock:^(ALAsset *asset) {
               // add photo to the target album
               [group addAsset:asset];
-              
-              // run the failure block
-              failureBlock(nil);
             }
            failureBlock:failureBlock];
       
@@ -96,9 +93,6 @@
                                         resultBlock:^(ALAsset *asset) {
                                           // add photo to the newly created album
                                           [group addAsset:asset];
-                                          
-                                          // call the failure block
-                                          failureBlock(nil);
                                         }
                                        failureBlock:failureBlock];
                             }
