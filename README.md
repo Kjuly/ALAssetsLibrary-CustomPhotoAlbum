@@ -10,6 +10,12 @@ A nice ALAssetsLibrary category for saving images into custom photo album by @Ma
         failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
 
 
+    -(void)saveVideo:(NSURL *)videoUrl
+             toAlbum:(NSString *)albumName
+     completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+        failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
+
+
 #### REFERENCE:
 
 [ALAssetsLibrary Class Reference][1]  

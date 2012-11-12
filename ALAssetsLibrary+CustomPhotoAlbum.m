@@ -44,6 +44,29 @@
                      }];
 }
 
+- (void)saveVideo:(NSURL *)videoUrl
+          toAlbum:(NSString *)albumName
+  completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
+    // write the video to the assets library (camera roll)
+    [self writeVideoAtPathToSavedPhotosAlbum: videoUrl
+                             completionBlock:^(NSURL *assetURL, NSError *error) {
+                           // run the completion block for writing image to saved
+                           //   photos album
+                           completionBlock(assetURL, error);
+                           
+                           // if an error occured, do not try to add the asset to
+                           //   the custom photo album
+                           if (error != nil)
+                               return;
+                           
+                           // add the asset to the custom photo album
+                           [self _addAssetURL:assetURL
+                                      toAlbum:albumName
+                                 failureBlock:failureBlock];
+                       }];
+}
+
 #pragma mark - Private Method
 
 -(void)_addAssetURL:(NSURL *)assetURL
