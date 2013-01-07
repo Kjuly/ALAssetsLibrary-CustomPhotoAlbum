@@ -13,12 +13,31 @@
 		7F83D8ED169A96D60091329A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8EB169A96D60091329A /* InfoPlist.strings */; };
 		7F83D8EF169A96D60091329A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D8EE169A96D60091329A /* main.m */; };
 		7F83D8F3169A96D60091329A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D8F2169A96D60091329A /* AppDelegate.m */; };
-		7F83D8F5169A96D60091329A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8F4169A96D60091329A /* Default.png */; };
-		7F83D8F7169A96D60091329A /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8F6169A96D60091329A /* Default@2x.png */; };
-		7F83D8F9169A96D60091329A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8F8169A96D60091329A /* Default-568h@2x.png */; };
 		7F83D90C169A98830091329A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D90B169A98830091329A /* RootViewController.m */; };
 		7F83D90E169A99E40091329A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F83D90D169A99E40091329A /* AssetsLibrary.framework */; };
 		7F83D912169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D911169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
+		7F83D915169A9D090091329A /* PhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D914169A9D090091329A /* PhotosTableViewController.m */; };
+		7F83D918169A9F150091329A /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D917169A9F150091329A /* Constants.m */; };
+		7F83D91A169AA6720091329A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F83D919169AA6720091329A /* MobileCoreServices.framework */; };
+		7F83D91D169AA9440091329A /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D91C169AA9440091329A /* PhotoViewController.m */; };
+		7F83D930169AB5810091329A /* Default-568h.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D91E169AB5810091329A /* Default-568h.png */; };
+		7F83D931169AB5810091329A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D91F169AB5810091329A /* Default-568h@2x.png */; };
+		7F83D932169AB5810091329A /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D920169AB5810091329A /* Default-Landscape@2x~ipad.png */; };
+		7F83D933169AB5810091329A /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D921169AB5810091329A /* Default-Landscape~ipad.png */; };
+		7F83D934169AB5810091329A /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D922169AB5810091329A /* Default-Portrait@2x~ipad.png */; };
+		7F83D935169AB5810091329A /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D923169AB5810091329A /* Default-Portrait~ipad.png */; };
+		7F83D936169AB5810091329A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D924169AB5810091329A /* Default.png */; };
+		7F83D937169AB5810091329A /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D925169AB5810091329A /* Default@2x.png */; };
+		7F83D938169AB5810091329A /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D926169AB5810091329A /* Icon-72.png */; };
+		7F83D939169AB5810091329A /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D927169AB5810091329A /* Icon-72@2x.png */; };
+		7F83D93A169AB5810091329A /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D928169AB5810091329A /* Icon-Small-50.png */; };
+		7F83D93B169AB5810091329A /* Icon-Small-50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D929169AB5810091329A /* Icon-Small-50@2x.png */; };
+		7F83D93C169AB5810091329A /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92A169AB5810091329A /* Icon-Small.png */; };
+		7F83D93D169AB5810091329A /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92B169AB5810091329A /* Icon-Small@2x.png */; };
+		7F83D93E169AB5810091329A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92C169AB5810091329A /* Icon.png */; };
+		7F83D93F169AB5810091329A /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92D169AB5810091329A /* Icon@2x.png */; };
+		7F83D940169AB5810091329A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92E169AB5810091329A /* iTunesArtwork */; };
+		7F83D941169AB5810091329A /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92F169AB5810091329A /* iTunesArtwork@2x */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,14 +51,36 @@
 		7F83D8F0169A96D60091329A /* ALAssetsLibraryCustomPhotoAlbum_BasicDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibraryCustomPhotoAlbum_BasicDemo-Prefix.pch"; sourceTree = "<group>"; };
 		7F83D8F1169A96D60091329A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7F83D8F2169A96D60091329A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		7F83D8F4169A96D60091329A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		7F83D8F6169A96D60091329A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		7F83D8F8169A96D60091329A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7F83D90A169A98830091329A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		7F83D90B169A98830091329A /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		7F83D90D169A99E40091329A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		7F83D910169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibrary+CustomPhotoAlbum.h"; sourceTree = "<group>"; };
 		7F83D911169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAssetsLibrary+CustomPhotoAlbum.m"; sourceTree = "<group>"; };
+		7F83D913169A9D090091329A /* PhotosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotosTableViewController.h; sourceTree = "<group>"; };
+		7F83D914169A9D090091329A /* PhotosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotosTableViewController.m; sourceTree = "<group>"; };
+		7F83D916169A9F150091329A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		7F83D917169A9F150091329A /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		7F83D919169AA6720091329A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		7F83D91B169AA9440091329A /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewController.h; sourceTree = "<group>"; };
+		7F83D91C169AA9440091329A /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
+		7F83D91E169AB5810091329A /* Default-568h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h.png"; sourceTree = "<group>"; };
+		7F83D91F169AB5810091329A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7F83D920169AB5810091329A /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		7F83D921169AB5810091329A /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		7F83D922169AB5810091329A /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
+		7F83D923169AB5810091329A /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
+		7F83D924169AB5810091329A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		7F83D925169AB5810091329A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		7F83D926169AB5810091329A /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		7F83D927169AB5810091329A /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		7F83D928169AB5810091329A /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50.png"; sourceTree = "<group>"; };
+		7F83D929169AB5810091329A /* Icon-Small-50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50@2x.png"; sourceTree = "<group>"; };
+		7F83D92A169AB5810091329A /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
+		7F83D92B169AB5810091329A /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
+		7F83D92C169AB5810091329A /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		7F83D92D169AB5810091329A /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		7F83D92E169AB5810091329A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
+		7F83D92F169AB5810091329A /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F83D91A169AA6720091329A /* MobileCoreServices.framework in Frameworks */,
 				7F83D90E169A99E40091329A /* AssetsLibrary.framework in Frameworks */,
 				7F83D8E3169A96D60091329A /* UIKit.framework in Frameworks */,
 				7F83D8E5169A96D60091329A /* Foundation.framework in Frameworks */,
@@ -82,6 +124,7 @@
 				7F83D8E4169A96D60091329A /* Foundation.framework */,
 				7F83D8E6169A96D60091329A /* CoreGraphics.framework */,
 				7F83D90D169A99E40091329A /* AssetsLibrary.framework */,
+				7F83D919169AA6720091329A /* MobileCoreServices.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -91,6 +134,8 @@
 			children = (
 				7F83D8F1169A96D60091329A /* AppDelegate.h */,
 				7F83D8F2169A96D60091329A /* AppDelegate.m */,
+				7F83D916169A9F150091329A /* Constants.h */,
+				7F83D917169A9F150091329A /* Constants.m */,
 				7F83D906169A98570091329A /* Models */,
 				7F83D909169A98570091329A /* Views */,
 				7F83D904169A98570091329A /* Controllers */,
@@ -107,9 +152,6 @@
 				7F83D8EB169A96D60091329A /* InfoPlist.strings */,
 				7F83D8EE169A96D60091329A /* main.m */,
 				7F83D8F0169A96D60091329A /* ALAssetsLibraryCustomPhotoAlbum_BasicDemo-Prefix.pch */,
-				7F83D8F4169A96D60091329A /* Default.png */,
-				7F83D8F6169A96D60091329A /* Default@2x.png */,
-				7F83D8F8169A96D60091329A /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -119,6 +161,10 @@
 			children = (
 				7F83D90A169A98830091329A /* RootViewController.h */,
 				7F83D90B169A98830091329A /* RootViewController.m */,
+				7F83D913169A9D090091329A /* PhotosTableViewController.h */,
+				7F83D914169A9D090091329A /* PhotosTableViewController.m */,
+				7F83D91B169AA9440091329A /* PhotoViewController.h */,
+				7F83D91C169AA9440091329A /* PhotoViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -133,6 +179,24 @@
 		7F83D907169A98570091329A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7F83D91E169AB5810091329A /* Default-568h.png */,
+				7F83D91F169AB5810091329A /* Default-568h@2x.png */,
+				7F83D920169AB5810091329A /* Default-Landscape@2x~ipad.png */,
+				7F83D921169AB5810091329A /* Default-Landscape~ipad.png */,
+				7F83D922169AB5810091329A /* Default-Portrait@2x~ipad.png */,
+				7F83D923169AB5810091329A /* Default-Portrait~ipad.png */,
+				7F83D924169AB5810091329A /* Default.png */,
+				7F83D925169AB5810091329A /* Default@2x.png */,
+				7F83D926169AB5810091329A /* Icon-72.png */,
+				7F83D927169AB5810091329A /* Icon-72@2x.png */,
+				7F83D928169AB5810091329A /* Icon-Small-50.png */,
+				7F83D929169AB5810091329A /* Icon-Small-50@2x.png */,
+				7F83D92A169AB5810091329A /* Icon-Small.png */,
+				7F83D92B169AB5810091329A /* Icon-Small@2x.png */,
+				7F83D92C169AB5810091329A /* Icon.png */,
+				7F83D92D169AB5810091329A /* Icon@2x.png */,
+				7F83D92E169AB5810091329A /* iTunesArtwork */,
+				7F83D92F169AB5810091329A /* iTunesArtwork@2x */,
 				7F83D908169A98570091329A /* Images */,
 			);
 			path = Resources;
@@ -214,9 +278,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F83D8ED169A96D60091329A /* InfoPlist.strings in Resources */,
-				7F83D8F5169A96D60091329A /* Default.png in Resources */,
-				7F83D8F7169A96D60091329A /* Default@2x.png in Resources */,
-				7F83D8F9169A96D60091329A /* Default-568h@2x.png in Resources */,
+				7F83D930169AB5810091329A /* Default-568h.png in Resources */,
+				7F83D931169AB5810091329A /* Default-568h@2x.png in Resources */,
+				7F83D932169AB5810091329A /* Default-Landscape@2x~ipad.png in Resources */,
+				7F83D933169AB5810091329A /* Default-Landscape~ipad.png in Resources */,
+				7F83D934169AB5810091329A /* Default-Portrait@2x~ipad.png in Resources */,
+				7F83D935169AB5810091329A /* Default-Portrait~ipad.png in Resources */,
+				7F83D936169AB5810091329A /* Default.png in Resources */,
+				7F83D937169AB5810091329A /* Default@2x.png in Resources */,
+				7F83D938169AB5810091329A /* Icon-72.png in Resources */,
+				7F83D939169AB5810091329A /* Icon-72@2x.png in Resources */,
+				7F83D93A169AB5810091329A /* Icon-Small-50.png in Resources */,
+				7F83D93B169AB5810091329A /* Icon-Small-50@2x.png in Resources */,
+				7F83D93C169AB5810091329A /* Icon-Small.png in Resources */,
+				7F83D93D169AB5810091329A /* Icon-Small@2x.png in Resources */,
+				7F83D93E169AB5810091329A /* Icon.png in Resources */,
+				7F83D93F169AB5810091329A /* Icon@2x.png in Resources */,
+				7F83D940169AB5810091329A /* iTunesArtwork in Resources */,
+				7F83D941169AB5810091329A /* iTunesArtwork@2x in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +310,9 @@
 				7F83D8F3169A96D60091329A /* AppDelegate.m in Sources */,
 				7F83D90C169A98830091329A /* RootViewController.m in Sources */,
 				7F83D912169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
+				7F83D915169A9D090091329A /* PhotosTableViewController.m in Sources */,
+				7F83D918169A9F150091329A /* Constants.m in Sources */,
+				7F83D91D169AA9440091329A /* PhotoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

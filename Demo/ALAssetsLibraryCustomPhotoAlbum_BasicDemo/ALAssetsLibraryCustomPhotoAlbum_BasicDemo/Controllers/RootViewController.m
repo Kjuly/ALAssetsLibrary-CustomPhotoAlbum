@@ -8,17 +8,29 @@
 
 #import "RootViewController.h"
 
-@interface RootViewController ()
+#import "PhotosTableViewController.h"
+
+@interface RootViewController () {
+ @private
+  UINavigationController * navigationController_;
+}
+
+@property (nonatomic, retain) UINavigationController * navigationController;
 
 @end
 
+
 @implementation RootViewController
+
+@synthesize navigationController = navigationController_;
+
+- (void)dealloc {
+  self.navigationController = nil;
+  [super dealloc];
+}
 
 - (id)init {
   self = [super init];
-  if (self) {
-    
-  }
   return self;
 }
 
@@ -26,6 +38,18 @@
 {
   [super viewDidLoad];
 	// Do any additional setup after loading the view.
+  
+  // Photos table view controller
+  PhotosTableViewController * photosTableViewController;
+  photosTableViewController = [PhotosTableViewController alloc];
+  [photosTableViewController initWithStyle:UITableViewStylePlain];
+  
+  // Main navigation controller
+  navigationController_ = [UINavigationController alloc];
+  [navigationController_ initWithRootViewController:photosTableViewController];
+  [photosTableViewController release];
+  [navigationController_.view setFrame:(CGRect){CGPointZero, {kKYViewWidth, kKYViewHeight}}];
+  [self.view addSubview:navigationController_.view];
 }
 
 - (void)didReceiveMemoryWarning
