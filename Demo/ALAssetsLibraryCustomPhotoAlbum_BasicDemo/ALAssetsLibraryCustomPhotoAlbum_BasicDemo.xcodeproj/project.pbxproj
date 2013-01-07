@@ -16,6 +16,9 @@
 		7F83D8F5169A96D60091329A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8F4169A96D60091329A /* Default.png */; };
 		7F83D8F7169A96D60091329A /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8F6169A96D60091329A /* Default@2x.png */; };
 		7F83D8F9169A96D60091329A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8F8169A96D60091329A /* Default-568h@2x.png */; };
+		7F83D902169A97D00091329A /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D901169A97D00091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
+		7F83D90C169A98830091329A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D90B169A98830091329A /* RootViewController.m */; };
+		7F83D90E169A99E40091329A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F83D90D169A99E40091329A /* AssetsLibrary.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +35,11 @@
 		7F83D8F4169A96D60091329A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		7F83D8F6169A96D60091329A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		7F83D8F8169A96D60091329A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7F83D900169A97D00091329A /* ALAssetsLibrary+CustomPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibrary+CustomPhotoAlbum.h"; sourceTree = "<group>"; };
+		7F83D901169A97D00091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAssetsLibrary+CustomPhotoAlbum.m"; sourceTree = "<group>"; };
+		7F83D90A169A98830091329A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		7F83D90B169A98830091329A /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		7F83D90D169A99E40091329A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F83D90E169A99E40091329A /* AssetsLibrary.framework in Frameworks */,
 				7F83D8E3169A96D60091329A /* UIKit.framework in Frameworks */,
 				7F83D8E5169A96D60091329A /* Foundation.framework in Frameworks */,
 				7F83D8E7169A96D60091329A /* CoreGraphics.framework in Frameworks */,
@@ -51,6 +60,7 @@
 		7F83D8D6169A96D60091329A = {
 			isa = PBXGroup;
 			children = (
+				7F83D8FF169A97D00091329A /* ALAssetsLibrary-CustomPhotoAlbum */,
 				7F83D8E8169A96D60091329A /* ALAssetsLibraryCustomPhotoAlbum_BasicDemo */,
 				7F83D8E1169A96D60091329A /* Frameworks */,
 				7F83D8E0169A96D60091329A /* Products */,
@@ -71,6 +81,7 @@
 				7F83D8E2169A96D60091329A /* UIKit.framework */,
 				7F83D8E4169A96D60091329A /* Foundation.framework */,
 				7F83D8E6169A96D60091329A /* CoreGraphics.framework */,
+				7F83D90D169A99E40091329A /* AssetsLibrary.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -80,6 +91,10 @@
 			children = (
 				7F83D8F1169A96D60091329A /* AppDelegate.h */,
 				7F83D8F2169A96D60091329A /* AppDelegate.m */,
+				7F83D906169A98570091329A /* Models */,
+				7F83D909169A98570091329A /* Views */,
+				7F83D904169A98570091329A /* Controllers */,
+				7F83D907169A98570091329A /* Resources */,
 				7F83D8E9169A96D60091329A /* Supporting Files */,
 			);
 			path = ALAssetsLibraryCustomPhotoAlbum_BasicDemo;
@@ -97,6 +112,53 @@
 				7F83D8F8169A96D60091329A /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7F83D8FF169A97D00091329A /* ALAssetsLibrary-CustomPhotoAlbum */ = {
+			isa = PBXGroup;
+			children = (
+				7F83D900169A97D00091329A /* ALAssetsLibrary+CustomPhotoAlbum.h */,
+				7F83D901169A97D00091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */,
+			);
+			path = "ALAssetsLibrary-CustomPhotoAlbum";
+			sourceTree = "<group>";
+		};
+		7F83D904169A98570091329A /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7F83D90A169A98830091329A /* RootViewController.h */,
+				7F83D90B169A98830091329A /* RootViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		7F83D906169A98570091329A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7F83D907169A98570091329A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7F83D908169A98570091329A /* Images */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7F83D908169A98570091329A /* Images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		7F83D909169A98570091329A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,6 +228,8 @@
 			files = (
 				7F83D8EF169A96D60091329A /* main.m in Sources */,
 				7F83D8F3169A96D60091329A /* AppDelegate.m in Sources */,
+				7F83D902169A97D00091329A /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
+				7F83D90C169A98830091329A /* RootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
