@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface PhotosTableViewController : UITableViewController
-  <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate>
 
 @end

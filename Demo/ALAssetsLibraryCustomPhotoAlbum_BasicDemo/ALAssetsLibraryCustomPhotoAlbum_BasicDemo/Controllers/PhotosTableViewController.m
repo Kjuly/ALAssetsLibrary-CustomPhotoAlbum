@@ -152,6 +152,14 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)_takePhoto:(id)sender {
   if (! [self _startCameraControllerFromViewController:self
                                          usingDelegate:self]) {
+    UIAlertView * alertView = [UIAlertView alloc];
+    [alertView initWithTitle:@"Camera Unavailable"
+                     message:@"Sorry, camera unavailable for the current device."
+                    delegate:self
+           cancelButtonTitle:@"Cancel"
+           otherButtonTitles:nil, nil];
+    [alertView show];
+    [alertView release];
   }
   return;
 }
