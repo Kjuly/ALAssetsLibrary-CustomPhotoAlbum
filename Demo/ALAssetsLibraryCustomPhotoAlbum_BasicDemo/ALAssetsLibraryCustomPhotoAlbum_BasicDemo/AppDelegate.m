@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 
+#import "RootViewController.h"
+
 @implementation AppDelegate
 
 - (void)dealloc {
@@ -19,8 +21,15 @@
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
   // Override point for customization after application launch.
-  self.window.backgroundColor = [UIColor whiteColor];
+  
+  // Setup root view controller
+  RootViewController * rootViewController;
+  rootViewController = [[RootViewController alloc] init];
+  [self.window setRootViewController:rootViewController];
+  [rootViewController release];
+  
   [self.window makeKeyAndVisible];
+  [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
   return YES;
 }
 
