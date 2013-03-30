@@ -30,7 +30,7 @@
                      completionBlock:^(NSURL *assetURL, NSError *error) {
                        // run the completion block for writing image to saved
                        //   photos album
-                       completionBlock(assetURL, error);
+                       if (completionBlock) completionBlock(assetURL, error);
                        
                        // if an error occured, do not try to add the asset to
                        //   the custom photo album
@@ -53,7 +53,7 @@
                              completionBlock:^(NSURL *assetURL, NSError *error) {
                            // run the completion block for writing image to saved
                            //   photos album
-                           completionBlock(assetURL, error);
+                           if (completionBlock) completionBlock(assetURL, error);
                            
                            // if an error occured, do not try to add the asset to
                            //   the custom photo album
