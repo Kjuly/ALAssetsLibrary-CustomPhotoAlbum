@@ -108,18 +108,24 @@
       // by @Kjuly
       ALAssetsLibrary * weakSelf = self;
       
+      // if iOS version is lower than 5.0, throw a warning message
+      if (! [self respondsToSelector:@selector(addAssetsGroupAlbumWithName:resultBlock:failureBlock:)])
+        NSLog(@"![WARNING][LIB:ALAssetsLibrary+CustomPhotoAlbum]: \
+              |-addAssetsGroupAlbumWithName:resultBlock:failureBlock:| \
+              only available on iOS 5.0 or later. \
+              ASSET cannot be saved to album!");
       // create new assets album
-      [self addAssetsGroupAlbumWithName:albumName 
-                            resultBlock:^(ALAssetsGroup *group) {
-                              // get the photo's instance
-                              [weakSelf assetForURL:assetURL 
-                                        resultBlock:^(ALAsset *asset) {
-                                          // add photo to the newly created album
-                                          [group addAsset:asset];
-                                        }
-                                       failureBlock:failureBlock];
-                            }
-                           failureBlock:failureBlock];
+      else [self addAssetsGroupAlbumWithName:albumName
+                                 resultBlock:^(ALAssetsGroup *group) {
+                                   // get the photo's instance
+                                   [weakSelf assetForURL:assetURL
+                                             resultBlock:^(ALAsset *asset) {
+                                               // add photo to the newly created album
+                                               [group addAsset:asset];
+                                             }
+                                            failureBlock:failureBlock];
+                                 }
+                                failureBlock:failureBlock];
       
       // should be the last iteration anyway, but just in case
       return;
