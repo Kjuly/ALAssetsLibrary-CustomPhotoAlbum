@@ -272,7 +272,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
       }*/
       
       // The completion block to be executed after image taking action process done
-      void (^completionBlock)(NSURL *, NSError *) = ^(NSURL *assetURL, NSError *error) {
+      void (^completion)(NSURL *, NSError *) = ^(NSURL *assetURL, NSError *error) {
         if (error) NSLog(@"!!!ERROR,  write the image data to the assets library (camera roll): %@",
                          [error description]);
         NSLog(@"*** URL %@ | %@ || type: %@ ***", assetURL, [assetURL absoluteString], [assetURL class]);
@@ -282,7 +282,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         [self.tableView reloadData];
       };
       
-      void (^failureBlock)(NSError *) = ^(NSError *error) {
+      void (^failure)(NSError *) = ^(NSError *error) {
         if (error == nil) return;
         NSLog(@"!!!ERROR, failed to add the asset to the custom photo album: %@", [error description]);
       };
@@ -291,8 +291,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
       if (! self.assetsLibrary) assetsLibrary_ = [[ALAssetsLibrary alloc] init];
       [self.assetsLibrary saveImage:finalImageToSave
                             toAlbum:kKYCustomPhotoAlbumName_
-                    completionBlock:completionBlock
-                       failureBlock:failureBlock];
+                         completion:completion
+                            failure:failure];
     });
   }
 }
