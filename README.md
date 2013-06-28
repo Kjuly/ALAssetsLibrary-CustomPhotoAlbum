@@ -48,7 +48,7 @@ Write the image data with meta data to the assets library (camera roll).
   2. MobileCoreServices.framework
 
 
-# REFERENCE:
+# REFERENCE
 
 - [ALAssetsLibrary Class Reference][1]  
 - [iOS5: Saving photos in custom photo album][2]
