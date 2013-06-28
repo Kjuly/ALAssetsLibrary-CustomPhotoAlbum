@@ -10,34 +10,39 @@
 
 @interface ALAssetsLibrary (CustomPhotoAlbum)
 
-//           |image|: the target image to be saved
-//       |albumName|: custom album name
-// |completionBlock|: block to be executed when succeed to write the image data
-//                    to the assets library (camera roll)
-//    |failureBlock|: block to be executed when failed to add the asset to the
-//                    custom photo album
+/*! Write the image data to the assets library (camera roll).
+ *
+ * \param image The target image to be saved
+ * \param albumName Custom album name
+ * \param completionBlock Block to be executed when succeed to write the image data to the assets library (camera roll)
+ * \param failureBlock Block to be executed when failed to add the asset to the custom photo album
+ */
 -(void)saveImage:(UIImage *)image
          toAlbum:(NSString *)albumName
  completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
 
-//        |videoUrl|: the target video to be saved
-//       |albumName|: custom album name
-// |completionBlock|: block to be executed when succeed to write the image data
-//                    to the assets library (camera roll)
-//    |failureBlock|: block to be executed when failed to add the asset to the
-//                    custom photo album
+/*! write the video to the assets library (camera roll).
+ *
+ * \param videoUrl The target video to be saved
+ * \param albumName Custom album name
+ * \param completionBlock Block to be executed when succeed to write the image data to the assets library (camera roll)
+ * \param failureBlock block to be executed when failed to add the asset to the custom photo album
+ */
 -(void)saveVideo:(NSURL *)videoUrl
          toAlbum:(NSString *)albumName
  completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
 
-//       |imageData|: the image data to be saved
-//       |albumName|: custom album name
-// |completionBlock|: block to be executed when succeed to write the image data
-//                    to the assets library (camera roll)
-//    |failureBlock|: block to be executed when failed to add the asset to the
-//                    custom photo album
+/*! Write the image data with meta data to the assets library (camera roll).
+ * 
+ * \param imageData The image data to be saved
+ * \param albumName Custom album name
+ * \param metadata Meta data for image
+ * \param completionBlock Block to be executed when succeed to write the image data
+ * \param failureBlock block to be executed when failed to add the asset to the custom photo album
+ *
+ */
 - (void)saveImageData:(NSData *)imageData
               toAlbum:(NSString *)albumName
              metadata:(NSDictionary *)metadata

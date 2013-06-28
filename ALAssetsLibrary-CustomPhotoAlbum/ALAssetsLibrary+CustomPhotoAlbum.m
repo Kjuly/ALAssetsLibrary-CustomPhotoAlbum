@@ -27,7 +27,8 @@
 - (void)saveImage:(UIImage *)image
           toAlbum:(NSString *)albumName
   completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
-     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
+     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock
+{
   [self writeImageToSavedPhotosAlbum:image.CGImage
                          orientation:(ALAssetOrientation)image.imageOrientation 
                      completionBlock:[self _addToAlbum:albumName
@@ -35,34 +36,37 @@
                                              onFailure:failureBlock]];
 }
 
-- (void)saveImageData:(NSData *)imageData
-              toAlbum:(NSString *)albumName
-             metadata:(NSDictionary *)metadata
-      completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
-     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
-    [self writeImageDataToSavedPhotosAlbum:imageData
-                                  metadata:metadata
-                           completionBlock:[self _addToAlbum:albumName
-                                                  onComplete:completionBlock
-                                                   onFailure:failureBlock]];
-    
-}
-
 - (void)saveVideo:(NSURL *)videoUrl
           toAlbum:(NSString *)albumName
   completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
-     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
+     failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock
+{
     [self writeVideoAtPathToSavedPhotosAlbum: videoUrl
                              completionBlock:[self _addToAlbum:albumName
                                                     onComplete:completionBlock
                                                      onFailure:failureBlock]];
 }
 
+- (void)saveImageData:(NSData *)imageData
+              toAlbum:(NSString *)albumName
+             metadata:(NSDictionary *)metadata
+      completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+         failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock
+{
+  [self writeImageDataToSavedPhotosAlbum:imageData
+                                metadata:metadata
+                         completionBlock:[self _addToAlbum:albumName
+                                                onComplete:completionBlock
+                                                 onFailure:failureBlock]];
+  
+}
+
 #pragma mark - Private Method
 
 -(void)_addAssetURL:(NSURL *)assetURL
             toAlbum:(NSString *)albumName
-       failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
+       failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock
+{
   __block BOOL albumWasFound = NO;
   
   ALAssetsLibraryGroupsEnumerationResultsBlock enumerationBlock;
