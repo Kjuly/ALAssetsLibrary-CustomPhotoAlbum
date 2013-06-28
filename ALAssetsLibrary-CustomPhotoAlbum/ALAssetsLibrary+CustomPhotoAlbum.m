@@ -13,6 +13,10 @@
             toAlbum:(NSString *)albumName
        failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock;
 
+- (ALAssetsLibraryWriteImageCompletionBlock)_addToAlbum:(NSString *)albumName
+                                             onComplete:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+                                              onFailure:(ALAssetsLibraryAccessFailureBlock)failureBlock;
+
 @end
 
 
@@ -26,9 +30,9 @@
      failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
   [self writeImageToSavedPhotosAlbum:image.CGImage
                          orientation:(ALAssetOrientation)image.imageOrientation 
-                     completionBlock:[self addToAlbum:albumName
-                                           onComplete:completionBlock
-                                            onFailure:failureBlock]];
+                     completionBlock:[self _addToAlbum:albumName
+                                            onComplete:completionBlock
+                                             onFailure:failureBlock]];
 }
 
 - (void)saveImageData:(NSData *)imageData
@@ -38,9 +42,9 @@
      failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
     [self writeImageDataToSavedPhotosAlbum:imageData
                                   metadata:metadata
-                           completionBlock:[self addToAlbum:albumName
-                                                 onComplete:completionBlock
-                                                  onFailure:failureBlock]];
+                           completionBlock:[self _addToAlbum:albumName
+                                                  onComplete:completionBlock
+                                                   onFailure:failureBlock]];
     
 }
 
@@ -49,31 +53,9 @@
   completionBlock:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
      failureBlock:(ALAssetsLibraryAccessFailureBlock)failureBlock {
     [self writeVideoAtPathToSavedPhotosAlbum: videoUrl
-                             completionBlock:[self addToAlbum:albumName
-                                                   onComplete:completionBlock
-                                                    onFailure:failureBlock]];
-}
-
-- (ALAssetsLibraryWriteImageCompletionBlock)addToAlbum:(NSString *)albumName
-                                            onComplete:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
-                                             onFailure:(ALAssetsLibraryAccessFailureBlock)failureBlock
-{
-    ALAssetsLibraryWriteImageCompletionBlock onComplete = ^(NSURL *assetURL, NSError *error) {
-        // run the completion block for writing image to saved
-        //   photos album
-        if (completionBlock) completionBlock(assetURL, error);
-        
-        // if an error occured, do not try to add the asset to
-        //   the custom photo album
-        if (error != nil)
-            return;
-        
-        // add the asset to the custom photo album
-        [self _addAssetURL:assetURL
-                   toAlbum:albumName
-              failureBlock:failureBlock];
-    };
-    return [onComplete copy];
+                             completionBlock:[self _addToAlbum:albumName
+                                                    onComplete:completionBlock
+                                                     onFailure:failureBlock]];
 }
 
 #pragma mark - Private Method
@@ -145,6 +127,28 @@
   [self enumerateGroupsWithTypes:ALAssetsGroupAlbum 
                       usingBlock:enumerationBlock
                     failureBlock:failureBlock];
+}
+
+- (ALAssetsLibraryWriteImageCompletionBlock)_addToAlbum:(NSString *)albumName
+                                             onComplete:(ALAssetsLibraryWriteImageCompletionBlock)completionBlock
+                                              onFailure:(ALAssetsLibraryAccessFailureBlock)failureBlock
+{
+  ALAssetsLibraryWriteImageCompletionBlock onComplete = ^(NSURL *assetURL, NSError *error) {
+    // run the completion block for writing image to saved
+    //   photos album
+    if (completionBlock) completionBlock(assetURL, error);
+    
+    // if an error occured, do not try to add the asset to
+    //   the custom photo album
+    if (error != nil)
+      return;
+    
+    // add the asset to the custom photo album
+    [self _addAssetURL:assetURL
+               toAlbum:albumName
+          failureBlock:failureBlock];
+  };
+  return [onComplete copy];
 }
 
 @end
