@@ -17,10 +17,10 @@
  * \param completion Block to be executed when succeed to write the image data to the assets library (camera roll)
  * \param failure Block to be executed when failed to add the asset to the custom photo album
  */
--(void)saveImage:(UIImage *)image
-         toAlbum:(NSString *)albumName
-      completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
-         failure:(ALAssetsLibraryAccessFailureBlock)failure;
+- (void)saveImage:(UIImage *)image
+          toAlbum:(NSString *)albumName
+       completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
+          failure:(ALAssetsLibraryAccessFailureBlock)failure;
 
 /*! write the video to the assets library (camera roll).
  *
@@ -29,10 +29,10 @@
  * \param completion Block to be executed when succeed to write the image data to the assets library (camera roll)
  * \param failure block to be executed when failed to add the asset to the custom photo album
  */
--(void)saveVideo:(NSURL *)videoUrl
-         toAlbum:(NSString *)albumName
-      completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
-         failure:(ALAssetsLibraryAccessFailureBlock)failure;
+- (void)saveVideo:(NSURL *)videoUrl
+          toAlbum:(NSString *)albumName
+       completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
+          failure:(ALAssetsLibraryAccessFailureBlock)failure;
 
 /*! Write the image data with meta data to the assets library (camera roll).
  * 
@@ -47,5 +47,15 @@
              metadata:(NSDictionary *)metadata
            completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
               failure:(ALAssetsLibraryAccessFailureBlock)failure;
+
+/*! Write the asset to the assets library (camera roll).
+ *
+ * \param assetURL The asset URL
+ * \param albumName Custom album name
+ * \param failure Block to be executed when failed to add the asset to the custom photo album
+ */
+-(void)addAssetURL:(NSURL *)assetURL
+           toAlbum:(NSString *)albumName
+           failure:(ALAssetsLibraryAccessFailureBlock)failure;
 
 @end
