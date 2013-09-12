@@ -9,16 +9,6 @@
 
 @interface ALAssetsLibrary (Private)
 
-/*! Write the asset to the assets library (camera roll). (Private)
- *
- * \param assetURL The asset URL
- * \param albumName Custom album name
- * \param failure Block to be executed when failed to add the asset to the custom photo album
- */
--(void)_addAssetURL:(NSURL *)assetURL
-            toAlbum:(NSString *)albumName
-            failure:(ALAssetsLibraryAccessFailureBlock)failure;
-
 /*! A block wraper to be executed after asset adding process done. (Private)
  *
  * \param albumName Custom album name
@@ -33,6 +23,31 @@
 
 
 @implementation ALAssetsLibrary (CustomPhotoAlbum)
+
+#pragma mark - Private Method
+
+- (ALAssetsLibraryWriteImageCompletionBlock)_resultBlockOfAddingToAlbum:(NSString *)albumName
+                                                             completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
+                                                                failure:(ALAssetsLibraryAccessFailureBlock)failure
+{
+  ALAssetsLibraryWriteImageCompletionBlock result = ^(NSURL *assetURL, NSError *error) {
+    // run the completion block for writing image to saved
+    //   photos album
+    if (completion) completion(assetURL, error);
+    
+    // if an error occured, do not try to add the asset to
+    //   the custom photo album
+    if (error != nil)
+      return;
+    
+    // add the asset to the custom photo album  jm
+    
+    [self addAssetURL:assetURL
+              toAlbum:albumName
+              failure:failure];
+  };
+  return [result copy];
+}
 
 #pragma mark - Public Method
 
@@ -70,14 +85,11 @@
                          completionBlock:[self _resultBlockOfAddingToAlbum:albumName
                                                                 completion:completion
                                                                    failure:failure]];
-  
 }
 
-#pragma mark - Private Method
-
--(void)_addAssetURL:(NSURL *)assetURL
-            toAlbum:(NSString *)albumName
-            failure:(ALAssetsLibraryAccessFailureBlock)failure
+-(void)addAssetURL:(NSURL *)assetURL
+           toAlbum:(NSString *)albumName
+           failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
   __block BOOL albumWasFound = NO;
   
@@ -89,7 +101,7 @@
       albumWasFound = YES;
       
       // get a hold of the photo's asset instance
-      [self assetForURL:assetURL 
+      [self assetForURL:assetURL
             resultBlock:^(ALAsset *asset) {
               // add photo to the target album
               [group addAsset:asset];
@@ -143,28 +155,6 @@
   [self enumerateGroupsWithTypes:ALAssetsGroupAlbum
                       usingBlock:enumerationBlock
                     failureBlock:failure];
-}
-
-- (ALAssetsLibraryWriteImageCompletionBlock)_resultBlockOfAddingToAlbum:(NSString *)albumName
-                                                             completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
-                                                                failure:(ALAssetsLibraryAccessFailureBlock)failure
-{
-  ALAssetsLibraryWriteImageCompletionBlock result = ^(NSURL *assetURL, NSError *error) {
-    // run the completion block for writing image to saved
-    //   photos album
-    if (completion) completion(assetURL, error);
-    
-    // if an error occured, do not try to add the asset to
-    //   the custom photo album
-    if (error != nil)
-      return;
-    
-    // add the asset to the custom photo album
-    [self _addAssetURL:assetURL
-               toAlbum:albumName
-               failure:failure];
-  };
-  return [result copy];
 }
 
 @end
