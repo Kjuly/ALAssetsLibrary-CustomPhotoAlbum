@@ -42,19 +42,21 @@
 @synthesize assetsLibrary = assetsLibrary_;
 @synthesize photos        = photos_;
 
-- (void)dealloc {
+- (void)dealloc
+{
   self.assetsLibrary = nil;
   [self _releaseSubviews];
   [super dealloc];
 }
 
-- (void)_releaseSubviews {
+- (void)_releaseSubviews
+{
   self.photos = nil;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style {
-  self = [super initWithStyle:style];
-  if (self) {
+- (id)initWithStyle:(UITableViewStyle)style
+{
+  if (self = [super initWithStyle:style]) {
     // Custom initialization
     [self setTitle:@"Demo"];
     photos_ = [[NSMutableArray alloc] init];
@@ -87,7 +89,8 @@
   [takePhotoButton release];
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
   [super viewDidUnload];
   [self _releaseSubviews];
 }
@@ -101,17 +104,21 @@
 #pragma mark - Table view data source
 
 // Return the number of sections.
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
   return 1;
 }
 
 // Return the number of rows in the section.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
+{
   return [self.photos count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
   static NSString * cellIdentifier = @"cell";
   UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
   if (!cell) cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
@@ -125,7 +132,8 @@
 #pragma mark - Table view delegate
 
 - (void)      tableView:(UITableView *)tableView
-didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
   __block PhotoViewController * photoViewController = [[PhotoViewController alloc] init];
   [self.navigationController pushViewController:photoViewController animated:YES];
   // Get image from Custom Photo Album for the selected photo url.
@@ -149,7 +157,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Private Method
 
 // Take photo
-- (void)_takePhoto:(id)sender {
+- (void)_takePhoto:(id)sender
+{
   if (! [self _startCameraControllerFromViewController:self
                                          usingDelegate:self]) {
     UIAlertView * alertView = [UIAlertView alloc];
@@ -169,7 +178,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //   and asynchronously present the camera user interface full screen
 - (BOOL)_startCameraControllerFromViewController:(UIViewController *)controller
                                    usingDelegate:(id <UIImagePickerControllerDelegate,
-                                                  UINavigationControllerDelegate>)delegate {
+                                                  UINavigationControllerDelegate>)delegate
+{
   if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == NO)
       || delegate == nil
       || controller == nil) return NO;
@@ -199,7 +209,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - UIImagePickerController Delegate
 
 // For responding to the user tapping Cancel.
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
   // Prior to iOS 5.0, if a view did not have a parent view controller
   //   and was being presented modally, the view controller that was presenting
   //   it would be returned.
@@ -222,7 +233,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 // For responding to the user accepting a newly-captured picture or movie
 - (void)imagePickerController:(UIImagePickerController *)picker
-didFinishPickingMediaWithInfo:(NSDictionary *)info {
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
   // dismiss image picker view
   [self dismissModalViewControllerAnimated:YES];
   [picker release];

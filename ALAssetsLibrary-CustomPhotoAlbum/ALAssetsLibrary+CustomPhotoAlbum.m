@@ -84,7 +84,6 @@
                          completionBlock:[self _resultBlockOfAddingToAlbum:albumName
                                                                 completion:completion
                                                                    failure:failure]];
-  
 }
 
 -(void)addAssetURL:(NSURL *)assetURL

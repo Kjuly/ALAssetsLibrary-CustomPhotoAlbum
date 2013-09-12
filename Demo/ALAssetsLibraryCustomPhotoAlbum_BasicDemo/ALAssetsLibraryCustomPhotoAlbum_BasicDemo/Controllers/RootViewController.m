@@ -24,14 +24,15 @@
 
 @synthesize navigationController = navigationController_;
 
-- (void)dealloc {
+- (void)dealloc
+{
   self.navigationController = nil;
   [super dealloc];
 }
 
-- (id)init {
-  self = [super init];
-  return self;
+- (id)init
+{
+  return (self = [super init]);
 }
 
 - (void)viewDidLoad
