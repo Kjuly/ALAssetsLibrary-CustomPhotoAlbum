@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PhotosTableViewController : UITableViewController
-  <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIAlertViewDelegate>
+@interface PhotosTableViewController : UITableViewController <
+  UIImagePickerControllerDelegate,
+  UINavigationControllerDelegate,
+  UIAlertViewDelegate
+>
 
 @end

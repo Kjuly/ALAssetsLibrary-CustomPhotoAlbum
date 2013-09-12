@@ -25,25 +25,28 @@
 
 @synthesize photoView = photoView_;
 
-- (void)dealloc {
+- (void)dealloc
+{
   [self _releaseSubviews];
   [super dealloc];
 }
 
-- (void)_releaseSubviews {
+- (void)_releaseSubviews
+{
   self.photoView = nil;
 }
 
-- (id)init {
-  self = [super init];
-  if (self) {
-    
-  }
-  return self;
+- (id)init
+{
+  return (self = [super init]);
 }
 
-- (void)loadView {
-  UIView * view = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, {kKYViewWidth, kKYViewHeight}}];
+- (void)loadView
+{
+  CGFloat height = (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1
+                    ?  kKYViewHeight : kKYViewHeight + kKYStatusBarHeight);
+  UIView * view = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, {kKYViewWidth, height}}];
+  [view setBackgroundColor:[UIColor whiteColor]];
   self.view = view;
   [view release];
 }
@@ -54,7 +57,10 @@
 	// Do any additional setup after loading the view.
   
   // Photo view
-  photoView_ = [[UIImageView alloc] initWithFrame:self.view.frame];
+  CGFloat originY = (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1
+                     ?  0.f : kKYStatusBarHeight);
+  CGRect photoViewFrame = CGRectMake(0.f, originY, kKYViewWidth, kKYViewHeight);
+  photoView_ = [[UIImageView alloc] initWithFrame:photoViewFrame];
   [photoView_ setContentMode:UIViewContentModeScaleAspectFill];
   [photoView_ setUserInteractionEnabled:YES];
   [self.view addSubview:photoView_];
@@ -68,17 +74,20 @@
   [tapGestureRecognizer release];
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
   [super viewDidUnload];
   [self _releaseSubviews];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
   [super viewWillAppear:animated];
   [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated
+{
   [super viewWillDisappear:animated];
   [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
@@ -92,14 +101,16 @@
 #pragma mark - Private Method
 
 // Back to previous view
-- (void)_back:(id)sender {
+- (void)_back:(id)sender
+{
   [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Public Method
 
 // Update with image get from Custom Photo Album
-- (void)updateWithImage:(UIImage *)image {
+- (void)updateWithImage:(UIImage *)image
+{
   [self.photoView setImage:image];
 }
 

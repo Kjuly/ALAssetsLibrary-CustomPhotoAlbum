@@ -40,8 +40,7 @@
     if (error != nil)
       return;
     
-    // add the asset to the custom photo album  jm
-    
+    // add the asset to the custom photo album
     [self addAssetURL:assetURL
               toAlbum:albumName
               failure:failure];
