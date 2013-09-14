@@ -117,14 +117,7 @@
       // Since you use the assets library inside the block,
       //   ARC will complain on compile time that there’s a retain cycle.
       //   When you have this – you just make a weak copy of your object.
-      //
-      //   __weak ALAssetsLibrary * weakSelf = self;
-      //
-      // by @Marin.
-      //
-      // I don't use ARC right now, and it leads a warning.
-      // by @Kjuly
-      ALAssetsLibrary * weakSelf = self;
+      __weak ALAssetsLibrary * weakSelf = self;
       
       // if iOS version is lower than 5.0, throw a warning message
       if (! [self respondsToSelector:@selector(addAssetsGroupAlbumWithName:resultBlock:failureBlock:)])

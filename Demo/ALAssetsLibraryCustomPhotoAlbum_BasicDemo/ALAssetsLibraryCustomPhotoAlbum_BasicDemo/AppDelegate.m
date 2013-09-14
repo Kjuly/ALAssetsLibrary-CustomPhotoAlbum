@@ -12,21 +12,16 @@
 
 @implementation AppDelegate
 
-- (void)dealloc {
-  [_window release];
-  [super dealloc];
-}
-
 - (BOOL)          application:(UIApplication *)application
-didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   // Override point for customization after application launch.
   
   // Setup root view controller
   RootViewController * rootViewController;
   rootViewController = [[RootViewController alloc] init];
   [self.window setRootViewController:rootViewController];
-  [rootViewController release];
   
   [self.window makeKeyAndVisible];
   [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];

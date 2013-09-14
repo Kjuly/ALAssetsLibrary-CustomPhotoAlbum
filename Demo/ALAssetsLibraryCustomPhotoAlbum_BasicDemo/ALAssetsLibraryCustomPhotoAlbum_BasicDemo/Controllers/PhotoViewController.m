@@ -13,9 +13,8 @@
   UIImageView * photoView_;
 }
 
-@property (nonatomic, retain) UIImageView * photoView;
+@property (nonatomic, strong) UIImageView * photoView;
 
-- (void)_releaseSubviews;
 - (void)_back:(id)sender;
 
 @end
@@ -24,17 +23,6 @@
 @implementation PhotoViewController
 
 @synthesize photoView = photoView_;
-
-- (void)dealloc
-{
-  [self _releaseSubviews];
-  [super dealloc];
-}
-
-- (void)_releaseSubviews
-{
-  self.photoView = nil;
-}
 
 - (id)init
 {
@@ -48,13 +36,11 @@
   UIView * view = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, {kKYViewWidth, height}}];
   [view setBackgroundColor:[UIColor whiteColor]];
   self.view = view;
-  [view release];
 }
 
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-	// Do any additional setup after loading the view.
   
   // Photo view
   CGFloat originY = (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1
@@ -67,17 +53,16 @@
   
   // Tap gesture on view
   UITapGestureRecognizer * tapGestureRecognizer = [UITapGestureRecognizer alloc];
-  [tapGestureRecognizer initWithTarget:self action:@selector(_back:)];
+  (void)[tapGestureRecognizer initWithTarget:self action:@selector(_back:)];
   [tapGestureRecognizer setNumberOfTapsRequired:1];
   [tapGestureRecognizer setNumberOfTouchesRequired:1];
   [self.view addGestureRecognizer:tapGestureRecognizer];
-  [tapGestureRecognizer release];
 }
 
 - (void)viewDidUnload
 {
   [super viewDidUnload];
-  [self _releaseSubviews];
+  self.photoView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
