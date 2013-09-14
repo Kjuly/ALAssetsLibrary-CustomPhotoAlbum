@@ -25,10 +25,9 @@
   NSMutableArray  * photos_;
 }
 
-@property (nonatomic, retain) ALAssetsLibrary * assetsLibrary;
+@property (nonatomic, strong) ALAssetsLibrary * assetsLibrary;
 @property (nonatomic, copy)   NSMutableArray  * photos;
 
-- (void)_releaseSubviews;
 - (void)_takePhoto:(id)sender;
 - (BOOL)_startCameraControllerFromViewController:(UIViewController *)controller
                                    usingDelegate:(id <UIImagePickerControllerDelegate,
@@ -41,18 +40,6 @@
 
 @synthesize assetsLibrary = assetsLibrary_;
 @synthesize photos        = photos_;
-
-- (void)dealloc
-{
-  self.assetsLibrary = nil;
-  [self _releaseSubviews];
-  [super dealloc];
-}
-
-- (void)_releaseSubviews
-{
-  self.photos = nil;
-}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -76,23 +63,21 @@
   
   // Right bar button (Take Photo) on navigation bar
   UIBarButtonItem * takePhotoButton = [UIBarButtonItem alloc];
-  [takePhotoButton initWithBarButtonSystemItem:UIBarButtonSystemItemCamera
-                                        target:self
-                                        action:@selector(_takePhoto:)];
-  [takePhotoButton initWithTitle:@"Take"
-                           style:UIBarButtonItemStyleBordered
-                          target:self
-                          action:@selector(_takePhoto:)];
+  (void)[takePhotoButton initWithBarButtonSystemItem:UIBarButtonSystemItemCamera
+                                              target:self
+                                              action:@selector(_takePhoto:)];
+  (void)[takePhotoButton initWithTitle:@"Take"
+                                 style:UIBarButtonItemStyleBordered
+                                target:self
+                                action:@selector(_takePhoto:)];
   [takePhotoButton setStyle:UIBarButtonItemStyleBordered];
   //  [navigationController_.navigationItem setRightBarButtonItem:takePhotoButton];
   [self.navigationItem setRightBarButtonItem:takePhotoButton];
-  [takePhotoButton release];
 }
 
 - (void)viewDidUnload
 {
   [super viewDidUnload];
-  [self _releaseSubviews];
 }
 
 - (void)didReceiveMemoryWarning
@@ -121,8 +106,8 @@
 {
   static NSString * cellIdentifier = @"cell";
   UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-  if (!cell) cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                            reuseIdentifier:cellIdentifier] autorelease];
+  if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                            reuseIdentifier:cellIdentifier];
   
   // Configure the cell...
   [cell.textLabel setText:[self.photos objectAtIndex:indexPath.row]];
@@ -134,9 +119,11 @@
 - (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  __block PhotoViewController * photoViewController = [[PhotoViewController alloc] init];
+  PhotoViewController * photoViewController = [[PhotoViewController alloc] init];
   [self.navigationController pushViewController:photoViewController animated:YES];
+  
   // Get image from Custom Photo Album for the selected photo url.
+  __weak PhotoViewController * weakPhotoViewController = photoViewController;
   [self.assetsLibrary assetForURL:[NSURL URLWithString:[self.photos objectAtIndex:indexPath.row]]
                       resultBlock:^(ALAsset *asset) {
                         //
@@ -145,9 +132,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                         // fullscreen: asset.defaultRepresentation.fullScreenImage
                         //             asset.defaultRepresentation.fullResolutionImage
                         //
-                        [photoViewController updateWithImage:
+                        [weakPhotoViewController updateWithImage:
                           [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage]];
-                        [photoViewController release];
                       }
                      failureBlock:^(NSError *error) {
                        NSLog(@"!!!ERROR: cannot get image: %@", [error description]);
@@ -162,13 +148,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   if (! [self _startCameraControllerFromViewController:self
                                          usingDelegate:self]) {
     UIAlertView * alertView = [UIAlertView alloc];
-    [alertView initWithTitle:@"Camera Unavailable"
-                     message:@"Sorry, camera unavailable for the current device."
-                    delegate:self
-           cancelButtonTitle:@"Cancel"
-           otherButtonTitles:nil, nil];
+    (void)[alertView initWithTitle:@"Camera Unavailable"
+                           message:@"Sorry, camera unavailable for the current device."
+                          delegate:self
+                 cancelButtonTitle:@"Cancel"
+                 otherButtonTitles:nil, nil];
     [alertView show];
-    [alertView release];
   }
   return;
 }
@@ -228,7 +213,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     [[picker presentingViewController] dismissModalViewControllerAnimated:YES];
   else
     [[picker parentViewController] dismissModalViewControllerAnimated:YES];
-  [picker release];
 }
 
 // For responding to the user accepting a newly-captured picture or movie
@@ -237,7 +221,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
   // dismiss image picker view
   [self dismissModalViewControllerAnimated:YES];
-  [picker release];
   
   // manage the media (photo)
   NSString * mediaType = [info objectForKey:UIImagePickerControllerMediaType];

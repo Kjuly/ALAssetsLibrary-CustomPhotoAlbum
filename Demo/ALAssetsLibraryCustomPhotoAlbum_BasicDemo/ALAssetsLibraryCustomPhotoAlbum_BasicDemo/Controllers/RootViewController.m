@@ -15,7 +15,7 @@
   UINavigationController * navigationController_;
 }
 
-@property (nonatomic, retain) UINavigationController * navigationController;
+@property (nonatomic, strong) UINavigationController * navigationController;
 
 @end
 
@@ -24,11 +24,6 @@
 
 @synthesize navigationController = navigationController_;
 
-- (void)dealloc
-{
-  self.navigationController = nil;
-  [super dealloc];
-}
 
 - (id)init
 {
@@ -43,12 +38,11 @@
   // Photos table view controller
   PhotosTableViewController * photosTableViewController;
   photosTableViewController = [PhotosTableViewController alloc];
-  [photosTableViewController initWithStyle:UITableViewStylePlain];
+  (void)[photosTableViewController initWithStyle:UITableViewStylePlain];
   
   // Main navigation controller
   navigationController_ = [UINavigationController alloc];
-  [navigationController_ initWithRootViewController:photosTableViewController];
-  [photosTableViewController release];
+  (void)[navigationController_ initWithRootViewController:photosTableViewController];
   [navigationController_.view setFrame:(CGRect){CGPointZero, {kKYViewWidth, kKYViewHeight}}];
   [self.view addSubview:navigationController_.view];
 }
