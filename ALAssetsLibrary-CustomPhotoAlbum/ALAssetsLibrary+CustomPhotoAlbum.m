@@ -67,7 +67,7 @@
        completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
           failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
-    [self writeVideoAtPathToSavedPhotosAlbum: videoUrl
+    [self writeVideoAtPathToSavedPhotosAlbum:videoUrl
                              completionBlock:[self _resultBlockOfAddingToAlbum:albumName
                                                                     completion:completion
                                                                        failure:failure]];
