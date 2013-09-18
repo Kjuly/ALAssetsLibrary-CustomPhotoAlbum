@@ -30,7 +30,7 @@
                                                              completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
                                                                 failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
-  ALAssetsLibraryWriteImageCompletionBlock result = ^(NSURL *assetURL, NSError *error) {
+  return ^(NSURL *assetURL, NSError *error) {
     // run the completion block for writing image to saved
     //   photos album
     //if (completion) completion(assetURL, error);
@@ -48,7 +48,6 @@
            completion:completion
               failure:failure];
   };
-  return [result copy];
 }
 
 #pragma mark - Public Method
