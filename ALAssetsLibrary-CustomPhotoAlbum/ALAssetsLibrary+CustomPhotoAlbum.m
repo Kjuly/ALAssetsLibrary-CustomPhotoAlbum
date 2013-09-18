@@ -33,16 +33,19 @@
   ALAssetsLibraryWriteImageCompletionBlock result = ^(NSURL *assetURL, NSError *error) {
     // run the completion block for writing image to saved
     //   photos album
-    if (completion) completion(assetURL, error);
+    //if (completion) completion(assetURL, error);
     
     // if an error occured, do not try to add the asset to
     //   the custom photo album
-    if (error != nil)
+    if (error != nil) {
+      if (failure) failure(error);
       return;
+    }
     
     // add the asset to the custom photo album
     [self addAssetURL:assetURL
               toAlbum:albumName
+           completion:completion
               failure:failure];
   };
   return [result copy];
@@ -86,25 +89,44 @@
                                                                    failure:failure]];
 }
 
--(void)addAssetURL:(NSURL *)assetURL
-           toAlbum:(NSString *)albumName
-           failure:(ALAssetsLibraryAccessFailureBlock)failure
+- (void)addAssetURL:(NSURL *)assetURL
+            toAlbum:(NSString *)albumName
+         completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
+            failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
   __block BOOL albumWasFound = NO;
   
   ALAssetsLibraryGroupsEnumerationResultsBlock enumerationBlock;
   enumerationBlock = ^(ALAssetsGroup *group, BOOL *stop) {
+    // Asset for URL result block to be excused when user confirmed
+    //   the application's access to the library
+    ALAssetsLibraryAssetForURLResultBlock assetForURLResultBlock;
+    assetForURLResultBlock = ^(ALAsset *asset) {
+      // add photo to the target album
+      if ([group addAsset:asset]) {
+        // run the completion block if the asset was added successfully
+        if (completion) completion(assetURL, nil);
+      }
+      // |-addAsset:| may fail (return NO) if the group is not editable,
+      //   or if the asset could not be added to the group.
+      else {
+        NSString * message = [NSString stringWithFormat:@"ALAssetsGroup failed to add asset: %@.", asset];
+        failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
+                                    code:0
+                                userInfo:@{NSLocalizedDescriptionKey : message}]);
+      }
+    };
+    
     // compare the names of the albums
     if ([albumName compare:[group valueForProperty:ALAssetsGroupPropertyName]] == NSOrderedSame) {
       // target album is found
       albumWasFound = YES;
       
-      // get a hold of the photo's asset instance
+      // Get a hold of the photo's asset instance
+      // If the user denies access to the application, or if no application is allowed to
+      //   access the data, the failure block is called.
       [self assetForURL:assetURL
-            resultBlock:^(ALAsset *asset) {
-              // add photo to the target album
-              [group addAsset:asset];
-            }
+            resultBlock:assetForURLResultBlock
            failureBlock:failure];
       
       // album was found, bail out of the method
@@ -129,11 +151,9 @@
       else [self addAssetsGroupAlbumWithName:albumName
                                  resultBlock:^(ALAssetsGroup *group) {
                                    // get the photo's instance
+                                   //   add the photo to the newly created album
                                    [weakSelf assetForURL:assetURL
-                                             resultBlock:^(ALAsset *asset) {
-                                               // add photo to the newly created album
-                                               [group addAsset:asset];
-                                             }
+                                             resultBlock:assetForURLResultBlock
                                             failureBlock:failure];
                                  }
                                 failureBlock:failure];

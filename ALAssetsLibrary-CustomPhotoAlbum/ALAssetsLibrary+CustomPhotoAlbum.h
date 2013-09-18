@@ -54,8 +54,9 @@
  * \param albumName Custom album name
  * \param failure Block to be executed when failed to add the asset to the custom photo album
  */
--(void)addAssetURL:(NSURL *)assetURL
-           toAlbum:(NSString *)albumName
-           failure:(ALAssetsLibraryAccessFailureBlock)failure;
+- (void)addAssetURL:(NSURL *)assetURL
+            toAlbum:(NSString *)albumName
+         completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
+            failure:(ALAssetsLibraryAccessFailureBlock)failure;
 
 @end
