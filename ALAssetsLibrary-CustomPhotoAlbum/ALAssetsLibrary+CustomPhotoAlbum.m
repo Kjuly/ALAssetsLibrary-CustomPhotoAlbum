@@ -19,6 +19,22 @@
                                                              completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
                                                                 failure:(ALAssetsLibraryAccessFailureBlock)failure;
 
+/*! A block wraper to be executed after |-assetForURL:resultBlock:failureBlock:| succeed.
+ *  Generally, this block will be excused when user confirmed the application's access
+ *    to the library.
+ *
+ * \param group A group to be used to add photo to the target album
+ * \param assetURL The URL for the target asset
+ * \param completion Block to be executed when succeed to add the asset to the assets library (camera roll)
+ * \param failure Block to be executed when failed to add the asset to the custom photo album
+ *
+ * \return An ALAssetsLibraryAssetForURLResultBlock type block
+ */
+- (ALAssetsLibraryAssetForURLResultBlock)_assetForURLResultBlockWithGroup:(ALAssetsGroup *)group
+                                                                 assetURL:(NSURL *)assetURL
+                                                               completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
+                                                                  failure:(ALAssetsLibraryAccessFailureBlock)failure;
+
 @end
 
 
@@ -47,6 +63,28 @@
               toAlbum:albumName
            completion:completion
               failure:failure];
+  };
+}
+
+- (ALAssetsLibraryAssetForURLResultBlock)_assetForURLResultBlockWithGroup:(ALAssetsGroup *)group
+                                                                 assetURL:(NSURL *)assetURL
+                                                               completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
+                                                                  failure:(ALAssetsLibraryAccessFailureBlock)failure
+{
+  return ^(ALAsset *asset) {
+    // add photo to the target album
+    if ([group addAsset:asset]) {
+      // run the completion block if the asset was added successfully
+      if (completion) completion(assetURL, nil);
+    }
+    // |-addAsset:| may fail (return NO) if the group is not editable,
+    //   or if the asset could not be added to the group.
+    else {
+      NSString * message = [NSString stringWithFormat:@"ALAssetsGroup failed to add asset: %@.", asset];
+      failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
+                                  code:0
+                              userInfo:@{NSLocalizedDescriptionKey : message}]);
+    }
   };
 }
 
@@ -97,25 +135,6 @@
   
   ALAssetsLibraryGroupsEnumerationResultsBlock enumerationBlock;
   enumerationBlock = ^(ALAssetsGroup *group, BOOL *stop) {
-    // Asset for URL result block to be excused when user confirmed
-    //   the application's access to the library
-    ALAssetsLibraryAssetForURLResultBlock assetForURLResultBlock;
-    assetForURLResultBlock = ^(ALAsset *asset) {
-      // add photo to the target album
-      if ([group addAsset:asset]) {
-        // run the completion block if the asset was added successfully
-        if (completion) completion(assetURL, nil);
-      }
-      // |-addAsset:| may fail (return NO) if the group is not editable,
-      //   or if the asset could not be added to the group.
-      else {
-        NSString * message = [NSString stringWithFormat:@"ALAssetsGroup failed to add asset: %@.", asset];
-        failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
-                                    code:0
-                                userInfo:@{NSLocalizedDescriptionKey : message}]);
-      }
-    };
-    
     // compare the names of the albums
     if ([albumName compare:[group valueForProperty:ALAssetsGroupPropertyName]] == NSOrderedSame) {
       // target album is found
@@ -124,6 +143,11 @@
       // Get a hold of the photo's asset instance
       // If the user denies access to the application, or if no application is allowed to
       //   access the data, the failure block is called.
+      ALAssetsLibraryAssetForURLResultBlock assetForURLResultBlock =
+        [self _assetForURLResultBlockWithGroup:group
+                                      assetURL:assetURL
+                                    completion:completion
+                                       failure:failure];
       [self assetForURL:assetURL
             resultBlock:assetForURLResultBlock
            failureBlock:failure];
@@ -147,15 +171,22 @@
               only available on iOS 5.0 or later. \
               ASSET cannot be saved to album!");
       // create new assets album
-      else [self addAssetsGroupAlbumWithName:albumName
-                                 resultBlock:^(ALAssetsGroup *group) {
-                                   // get the photo's instance
-                                   //   add the photo to the newly created album
-                                   [weakSelf assetForURL:assetURL
-                                             resultBlock:assetForURLResultBlock
-                                            failureBlock:failure];
-                                 }
-                                failureBlock:failure];
+      else {
+        [self addAssetsGroupAlbumWithName:albumName
+                              resultBlock:^(ALAssetsGroup *createdGroup) {
+                                // get the photo's instance
+                                //   add the photo to the newly created album
+                                ALAssetsLibraryAssetForURLResultBlock assetForURLResultBlock =
+                                  [weakSelf _assetForURLResultBlockWithGroup:createdGroup
+                                                                    assetURL:assetURL
+                                                                  completion:completion
+                                                                     failure:failure];
+                                [weakSelf assetForURL:assetURL
+                                          resultBlock:assetForURLResultBlock
+                                         failureBlock:failure];
+                              }
+                             failureBlock:failure];
+      }
       
       // should be the last iteration anyway, but just in case
       return;

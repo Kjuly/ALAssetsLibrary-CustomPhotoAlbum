@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
+
 @interface ALAssetsLibrary (CustomPhotoAlbum)
 
 /*! Write the image data to the assets library (camera roll).
