@@ -229,19 +229,21 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
   if (CFStringCompare((CFStringRef)mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) {
     // manage tasks in background thread
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      UIImage * originalImage, * editedImage, * imageToSave, * finalImageToSave;
-      editedImage   = (UIImage *)[info objectForKey:UIImagePickerControllerEditedImage];
-      originalImage = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
-      
+      UIImage * imageToSave = nil;
+      UIImage * editedImage = (UIImage *)[info objectForKey:UIImagePickerControllerEditedImage];
       if (editedImage) imageToSave = editedImage;
-      else             imageToSave = originalImage;
+      else imageToSave = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
       
-      // modify image's size before save it to photos album
-      CGSize sizeToSave = CGSizeMake(imageToSave.size.width, imageToSave.size.height);
-      UIGraphicsBeginImageContextWithOptions(sizeToSave, NO, 0.0);
-      [imageToSave drawInRect:CGRectMake(0, 0, sizeToSave.width, sizeToSave.height)];
-      finalImageToSave = UIGraphicsGetImageFromCurrentImageContext();
-      UIGraphicsEndImageContext();
+      UIImage * finalImageToSave = nil;
+      /* Modify image's size before save it to photos album
+       *
+       *  CGSize sizeToSave = CGSizeMake(imageToSave.size.width, imageToSave.size.height);
+       *  UIGraphicsBeginImageContextWithOptions(sizeToSave, NO, 0.f);
+       *  [imageToSave drawInRect:CGRectMake(0.f, 0.f, sizeToSave.width, sizeToSave.height)];
+       *  finalImageToSave = UIGraphicsGetImageFromCurrentImageContext();
+       *  UIGraphicsEndImageContext();
+       */
+      finalImageToSave = imageToSave;
       
       /*/ Get the image metadata
       UIImagePickerControllerSourceType pickerType = picker.sourceType;

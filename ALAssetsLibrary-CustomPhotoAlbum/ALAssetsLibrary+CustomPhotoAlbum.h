@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
+
 @interface ALAssetsLibrary (CustomPhotoAlbum)
 
 /*! Write the image data to the assets library (camera roll).
@@ -54,8 +55,9 @@
  * \param albumName Custom album name
  * \param failure Block to be executed when failed to add the asset to the custom photo album
  */
--(void)addAssetURL:(NSURL *)assetURL
-           toAlbum:(NSString *)albumName
-           failure:(ALAssetsLibraryAccessFailureBlock)failure;
+- (void)addAssetURL:(NSURL *)assetURL
+            toAlbum:(NSString *)albumName
+         completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
+            failure:(ALAssetsLibraryAccessFailureBlock)failure;
 
 @end
