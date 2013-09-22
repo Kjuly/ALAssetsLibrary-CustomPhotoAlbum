@@ -51,18 +51,18 @@
                                                                 failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
   return ^(NSURL *assetURL, NSError *error) {
-    // run the completion block for writing image to saved
+    // Run the completion block for writing image to saved
     //   photos album
     //if (completion) completion(assetURL, error);
     
-    // if an error occured, do not try to add the asset to
+    // If an error occured, do not try to add the asset to
     //   the custom photo album
     if (error != nil) {
       if (failure) failure(error);
       return;
     }
     
-    // add the asset to the custom photo album
+    // Add the asset to the custom photo album
     [self addAssetURL:assetURL
               toAlbum:albumName
            completion:completion
@@ -76,9 +76,9 @@
                                                                   failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
   return ^(ALAsset *asset) {
-    // add photo to the target album
+    // Add photo to the target album
     if ([group addAsset:asset]) {
-      // run the completion block if the asset was added successfully
+      // Run the completion block if the asset was added successfully
       if (completion) completion(assetURL, nil);
     }
     // |-addAsset:| may fail (return NO) if the group is not editable,
@@ -137,11 +137,17 @@
 {
   __block BOOL albumWasFound = NO;
   
+  // Signature for the block executed when a match is found during enumeration using
+  //   |-enumerateGroupsWithTypes:usingBlock:failureBlock:|.
+  //
+  // |group|: The current asset group in the enumeration.
+  // |stop| : A pointer to a boolean value; set the value to YES to stop enumeration.
+  //
   ALAssetsLibraryGroupsEnumerationResultsBlock enumerationBlock;
   enumerationBlock = ^(ALAssetsGroup *group, BOOL *stop) {
-    // compare the names of the albums
+    // Compare the names of the albums
     if ([albumName compare:[group valueForProperty:ALAssetsGroupPropertyName]] == NSOrderedSame) {
-      // target album is found
+      // Target album is found
       albumWasFound = YES;
       
       // Get a hold of the photo's asset instance
@@ -156,29 +162,29 @@
             resultBlock:assetForURLResultBlock
            failureBlock:failure];
       
-      // album was found, bail out of the method
-      return;
+      // Album was found, bail out of the method
+      *stop = YES;
     }
     
     if (group == nil && albumWasFound == NO) {
-      // photo albums are over, target album does not exist, thus create it
+      // Photo albums are over, target album does not exist, thus create it
       
       // Since you use the assets library inside the block,
       //   ARC will complain on compile time that there’s a retain cycle.
       //   When you have this – you just make a weak copy of your object.
       __weak ALAssetsLibrary * weakSelf = self;
       
-      // if iOS version is lower than 5.0, throw a warning message
+      // If iOS version is lower than 5.0, throw a warning message
       if (! [self respondsToSelector:@selector(addAssetsGroupAlbumWithName:resultBlock:failureBlock:)])
         NSLog(@"![WARNING][LIB:ALAssetsLibrary+CustomPhotoAlbum]: \
               |-addAssetsGroupAlbumWithName:resultBlock:failureBlock:| \
               only available on iOS 5.0 or later. \
               ASSET cannot be saved to album!");
-      // create new assets album
+      // Create new assets album
       else {
         [self addAssetsGroupAlbumWithName:albumName
                               resultBlock:^(ALAssetsGroup *createdGroup) {
-                                // get the photo's instance
+                                // Get the photo's instance
                                 //   add the photo to the newly created album
                                 ALAssetsLibraryAssetForURLResultBlock assetForURLResultBlock =
                                   [weakSelf _assetForURLResultBlockWithGroup:createdGroup
@@ -191,13 +197,12 @@
                               }
                              failureBlock:failure];
       }
-      
-      // should be the last iteration anyway, but just in case
-      return;
+      // Should be the last iteration anyway, but just in case
+      *stop = YES;
     }
   };
   
-  // search all photo albums in the library
+  // Search all photo albums in the library
   [self enumerateGroupsWithTypes:ALAssetsGroupAlbum
                       usingBlock:enumerationBlock
                     failureBlock:failure];
