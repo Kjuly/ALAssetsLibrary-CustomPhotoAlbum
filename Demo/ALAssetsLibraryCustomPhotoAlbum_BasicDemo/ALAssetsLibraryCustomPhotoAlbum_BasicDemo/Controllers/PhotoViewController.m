@@ -31,7 +31,7 @@
 
 - (void)loadView
 {
-  CGFloat height = (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1
+  CGFloat height = (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1
                     ?  kKYViewHeight : kKYViewHeight + kKYStatusBarHeight);
   UIView * view = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, {kKYViewWidth, height}}];
   [view setBackgroundColor:[UIColor whiteColor]];
@@ -43,8 +43,8 @@
   [super viewDidLoad];
   
   // Photo view
-  CGFloat originY = (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1
-                     ?  0.f : kKYStatusBarHeight);
+  CGFloat originY = (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1
+                     ? 0.f : kKYStatusBarHeight);
   CGRect photoViewFrame = CGRectMake(0.f, originY, kKYViewWidth, kKYViewHeight);
   photoView_ = [[UIImageView alloc] initWithFrame:photoViewFrame];
   [photoView_ setContentMode:UIViewContentModeScaleAspectFill];
