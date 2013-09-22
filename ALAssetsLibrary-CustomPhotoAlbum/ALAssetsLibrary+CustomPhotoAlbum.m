@@ -7,6 +7,10 @@
 
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
 
+#if !__has_feature(objc_arc)
+#error This class requires automatic reference counting (ARC).
+#endif
+
 @interface ALAssetsLibrary (Private)
 
 /*! A block wraper to be executed after asset adding process done. (Private)
