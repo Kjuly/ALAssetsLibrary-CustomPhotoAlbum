@@ -31,8 +31,13 @@
 
 - (void)loadView
 {
+  // iOS 5 SDK does not defined NSFoundationVersionNumber_iOS_6_1
+#ifdef NSFoundationVersionNumber_iOS_6_1
   CGFloat height = (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1
                     ?  kKYViewHeight : kKYViewHeight + kKYStatusBarHeight);
+#else
+  CGFloat height = kKYViewHeight;
+#endif
   UIView * view = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, {kKYViewWidth, height}}];
   [view setBackgroundColor:[UIColor whiteColor]];
   self.view = view;
@@ -43,8 +48,12 @@
   [super viewDidLoad];
   
   // Photo view
+#ifdef NSFoundationVersionNumber_iOS_6_1
   CGFloat originY = (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1
                      ? 0.f : kKYStatusBarHeight);
+#else
+  CGFloat originY = 0.f;
+#endif
   CGRect photoViewFrame = CGRectMake(0.f, originY, kKYViewWidth, kKYViewHeight);
   photoView_ = [[UIImageView alloc] initWithFrame:photoViewFrame];
   [photoView_ setContentMode:UIViewContentModeScaleAspectFill];
