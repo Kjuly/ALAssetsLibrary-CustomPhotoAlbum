@@ -273,10 +273,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         if (error) NSLog(@"!!!ERROR,  write the image data to the assets library (camera roll): %@",
                          [error description]);
         NSLog(@"*** URL %@ | %@ || type: %@ ***", assetURL, [assetURL absoluteString], [assetURL class]);
-        // Add new one to |photos_|
+        // Add new item to |photos_| & table view appropriately
+        NSIndexPath * indexPath = [NSIndexPath indexPathForRow:self.photos.count
+                                                     inSection:0];
         [self.photos addObject:[assetURL absoluteString]];
-        // Reload tableview data
-        [self.tableView reloadData];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                              withRowAnimation:UITableViewRowAnimationFade];
       };
       
       void (^failure)(NSError *) = ^(NSError *error) {
