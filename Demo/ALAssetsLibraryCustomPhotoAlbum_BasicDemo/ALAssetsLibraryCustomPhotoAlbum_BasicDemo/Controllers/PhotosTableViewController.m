@@ -120,7 +120,7 @@
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   PhotoViewController * photoViewController = [[PhotoViewController alloc] init];
-  [self.navigationController pushViewController:photoViewController animated:YES];
+  [self.navigationController pushViewController:photoViewController animated:NO];
   
   // Get image from Custom Photo Album for the selected photo url.
   __weak PhotoViewController * weakPhotoViewController = photoViewController;
