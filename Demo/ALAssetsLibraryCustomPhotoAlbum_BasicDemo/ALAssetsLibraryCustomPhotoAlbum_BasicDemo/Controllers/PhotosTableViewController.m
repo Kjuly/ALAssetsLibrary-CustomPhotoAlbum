@@ -19,16 +19,14 @@
 
 @interface PhotosTableViewController () {
  @private
-  ALAssetsLibrary         * assetsLibrary_;
-  NSMutableArray          * photos_;
-  UIImagePickerController * picker_;
-  PhotoViewController     * photoViewController_;
+  ALAssetsLibrary     * assetsLibrary_;
+  NSMutableArray      * photos_;
+  PhotoViewController * photoViewController_;
 }
 
-@property (nonatomic, strong) ALAssetsLibrary         * assetsLibrary;
-@property (nonatomic, copy)   NSMutableArray          * photos;
-@property (nonatomic, strong) UIImagePickerController * picker;
-@property (nonatomic, strong) PhotoViewController     * photoViewController;
+@property (nonatomic, strong) ALAssetsLibrary     * assetsLibrary;
+@property (nonatomic, copy)   NSMutableArray      * photos;
+@property (nonatomic, strong) PhotoViewController * photoViewController;
 
 - (void)_takePhoto:(id)sender;
 
@@ -39,7 +37,6 @@
 
 @synthesize assetsLibrary        = assetsLibrary_;
 @synthesize photos               = photos_;
-@synthesize picker               = picker_;
 @synthesize parentViewController = photoViewController_;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -86,8 +83,6 @@
   
   // Dispose of any resources that can be recreated.
   assetsLibrary_       = nil;
-  picker_.delegate     = nil;
-  picker_              = nil;
   photoViewController_ = nil;
 }
 
@@ -100,29 +95,6 @@
   }
   assetsLibrary_ = [[ALAssetsLibrary alloc] init];
   return assetsLibrary_;
-}
-
-- (UIImagePickerController *)picker
-{
-  if (picker_) {
-    return picker_;
-  }
-  
-  picker_ = [[UIImagePickerController alloc] init];
-  picker_.sourceType = UIImagePickerControllerSourceTypeCamera;
-  
-  // Displays a control that allows the user to choose picture or
-  //   movie capture, if both are available:
-  //picker.mediaTypes =
-  //  [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-  picker_.mediaTypes = @[(NSString *)kUTTypeImage];
-  
-  // Hides the controls for moving & scaling pictures, or for
-  //   trimming movies. To instead show the controls, use YES.
-  picker_.allowsEditing = NO;
-  picker_.delegate      = self;
-  
-  return picker_;
 }
 
 - (PhotoViewController *)photoViewController
@@ -201,12 +173,27 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     return;
   }
   
+  // Generate picker
+  UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+  picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+  
+  // Displays a control that allows the user to choose picture or
+  //   movie capture, if both are available:
+  //picker.mediaTypes =
+  //  [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+  picker.mediaTypes = @[(NSString *)kUTTypeImage];
+  
+  // Hides the controls for moving & scaling pictures, or for
+  //   trimming movies. To instead show the controls, use YES.
+  picker.allowsEditing = NO;
+  picker.delegate      = self;
+  
   if ([self.navigationController respondsToSelector:
        @selector(presentViewController:animated:completion:)])
   {
-    [self.navigationController presentViewController:self.picker animated:YES completion:nil];
+    [self.navigationController presentViewController:picker animated:YES completion:nil];
   } else {
-    [self.navigationController presentModalViewController:self.picker animated:YES];
+    [self.navigationController presentModalViewController:picker animated:YES];
   }
 }
 
@@ -239,6 +226,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
       [[picker parentViewController] dismissModalViewControllerAnimated:YES];
     }
   }
+  
+  picker.delegate = nil;
+  picker          = nil;
 }
 
 // For responding to the user accepting a newly-captured picture or movie
@@ -246,7 +236,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
   // Dismiss image picker view
-  [self dismissModalViewControllerAnimated:YES];
+  [self imagePickerControllerDidCancel:picker];
   
   // Manage the media (photo)
   NSString * mediaType = info[UIImagePickerControllerMediaType];
