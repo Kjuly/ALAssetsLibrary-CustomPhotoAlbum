@@ -115,7 +115,7 @@
   //   movie capture, if both are available:
   //picker.mediaTypes =
   //  [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-  picker_.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeImage];
+  picker_.mediaTypes = @[(NSString *)kUTTypeImage];
   
   // Hides the controls for moving & scaling pictures, or for
   //   trimming movies. To instead show the controls, use YES.
@@ -158,7 +158,7 @@
                                             reuseIdentifier:cellIdentifier];
   
   // Configure the cell...
-  [cell.textLabel setText:[self.photos objectAtIndex:indexPath.row]];
+  [cell.textLabel setText:(self.photos)[indexPath.row]];
   return cell;
 }
 
@@ -171,7 +171,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   
   // Get image from Custom Photo Album for the selected photo url.
   __weak PhotoViewController * weakPhotoViewController = self.photoViewController;
-  [self.assetsLibrary assetForURL:[NSURL URLWithString:[self.photos objectAtIndex:indexPath.row]]
+  [self.assetsLibrary assetForURL:[NSURL URLWithString:(self.photos)[indexPath.row]]
                       resultBlock:^(ALAsset *asset) {
                         //
                         //  thumbnail: asset.thumbnail
@@ -249,7 +249,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
   [self dismissModalViewControllerAnimated:YES];
   
   // Manage the media (photo)
-  NSString * mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+  NSString * mediaType = info[UIImagePickerControllerMediaType];
   // Handle a still image capture
   CFStringRef mediaTypeRef = (__bridge CFStringRef)mediaType;
   if (CFStringCompare(mediaTypeRef,
@@ -264,9 +264,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
   // Manage tasks in background thread
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     UIImage * imageToSave = nil;
-    UIImage * editedImage = (UIImage *)[info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage * editedImage = (UIImage *)info[UIImagePickerControllerEditedImage];
     if (editedImage) imageToSave = editedImage;
-    else imageToSave = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
+    else imageToSave = (UIImage *)info[UIImagePickerControllerOriginalImage];
     
     UIImage * finalImageToSave = nil;
     /* Modify image's size before save it to photos album
