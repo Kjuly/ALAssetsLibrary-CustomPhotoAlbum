@@ -86,6 +86,7 @@
   
   // Dispose of any resources that can be recreated.
   assetsLibrary_       = nil;
+  picker_.delegate     = nil;
   picker_              = nil;
   photoViewController_ = nil;
 }
