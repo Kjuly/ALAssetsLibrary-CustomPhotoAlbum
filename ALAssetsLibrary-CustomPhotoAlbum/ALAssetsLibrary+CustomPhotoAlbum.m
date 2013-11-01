@@ -208,4 +208,47 @@
                     failureBlock:failure];
 }
 
+- (NSArray *)loadPhotosFromAlbum:(NSString *)albumName
+{
+    NSMutableArray *images = [[NSMutableArray alloc] init];
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [library enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+            // Checking if library exists
+            if (group == nil)
+            {
+                return;
+            }
+            // If we have found library with given title we enumerate it
+            if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:albumName]) {
+                [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                    // Checking if grup isn't empty
+                    if(result == nil) {
+                        return;
+                    }
+                    
+                    // Getting the image from the asset
+                    UIImage *img = [UIImage imageWithCGImage:[[result defaultRepresentation] fullScreenImage]
+                                                       scale:1.0
+                                                 orientation:(UIImageOrientation)[[result valueForProperty:@"ALAssetPropertyOrientation"] intValue]];
+
+                    // saving this image to the array
+                    [images addObject:img];
+                 }];
+            }
+            
+            if (stop) {
+                return;
+            }
+            
+        } failureBlock:^(NSError *error) {
+            NSLog(@"%@", [error localizedDescription]);
+        }];
+    });
+    
+    // Returning array of images from the custom album
+    return images;
+}
+
 @end
