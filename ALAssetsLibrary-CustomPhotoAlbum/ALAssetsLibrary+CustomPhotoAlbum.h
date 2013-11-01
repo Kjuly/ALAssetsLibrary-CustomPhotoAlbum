@@ -60,4 +60,10 @@
          completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
             failure:(ALAssetsLibraryAccessFailureBlock)failure;
 
+/*! Loads assets from the assets group (album)
+ *
+ * \param albumName Custom album name
+ */
+- (NSArray *)loadPhotosFromAlbum:(NSString *)albumName;
+
 @end
