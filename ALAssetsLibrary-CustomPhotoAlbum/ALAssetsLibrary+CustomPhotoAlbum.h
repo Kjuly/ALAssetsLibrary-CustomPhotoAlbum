@@ -63,6 +63,8 @@
 /*! Loads assets from the assets group (album)
  *
  * \param albumName Custom album name
+ *
+ * \return An array of images from target album
  */
 - (NSArray *)loadPhotosFromAlbum:(NSString *)albumName;
 
