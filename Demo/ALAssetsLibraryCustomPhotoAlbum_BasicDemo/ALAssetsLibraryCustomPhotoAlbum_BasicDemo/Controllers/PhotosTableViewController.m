@@ -70,6 +70,17 @@
                                 action:@selector(_takePhoto:)];
   [takePhotoButton setStyle:UIBarButtonItemStyleBordered];
   [self.navigationItem setRightBarButtonItem:takePhotoButton];
+  
+  // Note:
+  //
+  //  This code snippet is for testing |ALAssetsLibrary+CustomPhotoAlbum| lib's method:
+  //   |-loadPhotosFromAlbum:completion:|.
+  //
+  /*
+  [self.assetsLibrary loadImagesFromAlbum:kKYCustomPhotoAlbumName_
+                               completion:^(NSMutableArray *images, NSError *error) {
+                                 NSLog(@"%s: %@", __PRETTY_FUNCTION__, images);
+                               }];*/
 }
 
 - (void)viewDidUnload
