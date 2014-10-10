@@ -172,7 +172,7 @@
       // Since you use the assets library inside the block,
       //   ARC will complain on compile time that there’s a retain cycle.
       //   When you have this – you just make a weak copy of your object.
-      ALAssetsLibrary * __weak weakSelf = self;
+      __weak ALAssetsLibrary * weakSelf = self;
       
       // If iOS version is lower than 5.0, throw a warning message
       if (! [self respondsToSelector:@selector(addAssetsGroupAlbumWithName:resultBlock:failureBlock:)])
@@ -182,20 +182,103 @@
               ASSET cannot be saved to album!");
       // Create new assets album
       else {
-        [self addAssetsGroupAlbumWithName:albumName
-                              resultBlock:^(ALAssetsGroup *createdGroup) {
-                                // Get the photo's instance
-                                //   add the photo to the newly created album
-                                ALAssetsLibraryAssetForURLResultBlock assetForURLResultBlock =
-                                  [weakSelf _assetForURLResultBlockWithGroup:createdGroup
+
+        // Different code for iOS 7 and 8
+          // See: http://stackoverflow.com/questions/26003211/assetslibrary-framework-broken-on-ios-8
+          // See: http://stackoverflow.com/questions/8867496/get-last-image-from-photos-app/8872425#8872425
+          // PHPhotoLibrary_class will only be non-nil on iOS 8.x.x
+          Class PHPhotoLibrary_class = NSClassFromString(@"PHPhotoLibrary");
+          
+          if (PHPhotoLibrary_class) {
+              
+              /**
+               *
+               iOS 8..x. . code that has to be called dynamically at runtime and will not link on iOS 7.x.x ...
+               
+               [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+               [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:title];
+               } completionHandler:^(BOOL success, NSError *error) {
+               if (!success) {
+               NSLog(@"Error creating album: %@", error);
+               }
+               }];
+               */
+              
+              // dynamic runtime code for code chunk listed above
+              id sharedPhotoLibrary = [PHPhotoLibrary_class performSelector:NSSelectorFromString(@"sharedPhotoLibrary")];
+              
+              SEL performChanges = NSSelectorFromString(@"performChanges:completionHandler:");
+              
+              NSMethodSignature *methodSig = [sharedPhotoLibrary methodSignatureForSelector:performChanges];
+              
+              NSInvocation* inv = [NSInvocation invocationWithMethodSignature:methodSig];
+              [inv setTarget:sharedPhotoLibrary];
+              [inv setSelector:performChanges];
+              
+              void(^firstBlock)() = ^void() {
+                  Class PHAssetCollectionChangeRequest_class = NSClassFromString(@"PHAssetCollectionChangeRequest");
+                  SEL creationRequestForAssetCollectionWithTitle = NSSelectorFromString(@"creationRequestForAssetCollectionWithTitle:");
+                  [PHAssetCollectionChangeRequest_class performSelector:creationRequestForAssetCollectionWithTitle withObject:albumName];
+                  
+              };
+              
+              void (^secondBlock)(BOOL success, NSError *error) = ^void(BOOL success, NSError *error) {
+                  if (success) {
+                      [self enumerateGroupsWithTypes:ALAssetsGroupAlbum usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                          if (group) {
+                              NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
+                              if ([albumName isEqualToString:name]) {
+                                  
+                                  // TODO: Remove duplication of the success block
+                                  
+                                  // Get the photo's instance
+                                  //   add the photo to the newly created album
+                                  ALAssetsLibraryAssetForURLResultBlock assetForURLResultBlock =
+                                  [weakSelf _assetForURLResultBlockWithGroup:group
                                                                     assetURL:assetURL
                                                                   completion:completion
                                                                      failure:failure];
-                                [weakSelf assetForURL:assetURL
-                                          resultBlock:assetForURLResultBlock
-                                         failureBlock:failure];
+                                  [weakSelf assetForURL:assetURL
+                                            resultBlock:assetForURLResultBlock
+                                           failureBlock:failure];
+                                  
                               }
-                             failureBlock:failure];
+                          }
+                      } failureBlock:failure];
+                  }
+                  
+                  if (error) {
+                      NSLog(@"Error creating album: %@", error);
+                  }
+              };
+              
+              // Set the first and second blocks.
+              [inv setArgument:&firstBlock atIndex:2];
+              [inv setArgument:&secondBlock atIndex:3];
+              
+              [inv invoke];
+              
+          }
+          else {   
+              // code that always creates an album on iOS 7.x.x but fails
+              // in certain situations such as if album has been deleted
+              // previously on iOS 8...x. .
+              
+              [self addAssetsGroupAlbumWithName:albumName
+                                    resultBlock:^(ALAssetsGroup *createdGroup) {
+                                        // Get the photo's instance
+                                        //   add the photo to the newly created album
+                                        ALAssetsLibraryAssetForURLResultBlock assetForURLResultBlock =
+                                        [weakSelf _assetForURLResultBlockWithGroup:createdGroup
+                                                                          assetURL:assetURL
+                                                                        completion:completion
+                                                                           failure:failure];
+                                        [weakSelf assetForURL:assetURL
+                                                  resultBlock:assetForURLResultBlock
+                                                 failureBlock:failure];
+                                    }
+                                   failureBlock:failure];
+          }
       }
       // Should be the last iteration anyway, but just in case
       *stop = YES;
