@@ -198,23 +198,23 @@
         // Different code for iOS 7 and 8
         // See: http://stackoverflow.com/questions/26003211/assetslibrary-framework-broken-on-ios-8
         // See: http://stackoverflow.com/questions/8867496/get-last-image-from-photos-app/8872425#8872425
-        // PHPhotoLibrary_class will only be non-nil on iOS 8.x.x
+        // PHPhotoLibrary_class will only be non-nil on iOS 8.x.
         Class PHPhotoLibrary_class = NSClassFromString(@"PHPhotoLibrary");
         
         if (PHPhotoLibrary_class) {
-          
           /**
            *
-           iOS 8..x. . code that has to be called dynamically at runtime and will not link on iOS 7.x.x ...
+           iOS 8.x. . code that has to be called dynamically at runtime and will not link on iOS 7.x.
            
-           [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-           [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:title];
-           } completionHandler:^(BOOL success, NSError *error) {
-           if (!success) {
-           NSLog(@"Error creating album: %@", error);
-           }
-           }];
-           */
+          [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:title];
+          } completionHandler:^(BOOL success, NSError *error) {
+            if (!success) {
+              NSLog(@"Error creating album: %@", error);
+            }
+          }];
+           
+          */
           
           // dynamic runtime code for code chunk listed above
 #pragma clang diagnostic push
@@ -266,8 +266,7 @@
         else {
           // code that always creates an album on iOS 7.x.x but fails
           // in certain situations such as if album has been deleted
-          // previously on iOS 8...x. .
-          
+          // previously on iOS 8.x.
           [self addAssetsGroupAlbumWithName:albumName
                                 resultBlock:addPhotoToLibraryBlock
                                failureBlock:failure];
