@@ -9,9 +9,7 @@
 #import "PhotosTableViewController.h"
 
 #import "PhotoViewController.h"
-
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
-
 #import <MobileCoreServices/MobileCoreServices.h>
 
 
@@ -21,25 +19,25 @@
 
 @interface PhotosTableViewController () {
  @private
-  ALAssetsLibrary * assetsLibrary_;
-  NSMutableArray  * photos_;
+  ALAssetsLibrary     * assetsLibrary_;
+  NSMutableArray      * photos_;
+  PhotoViewController * photoViewController_;
 }
 
-@property (nonatomic, strong) ALAssetsLibrary * assetsLibrary;
-@property (nonatomic, copy)   NSMutableArray  * photos;
+@property (nonatomic, strong) ALAssetsLibrary     * assetsLibrary;
+@property (nonatomic, copy)   NSMutableArray      * photos;
+@property (nonatomic, strong) PhotoViewController * photoViewController;
 
 - (void)_takePhoto:(id)sender;
-- (BOOL)_startCameraControllerFromViewController:(UIViewController *)controller
-                                   usingDelegate:(id <UIImagePickerControllerDelegate,
-                                                  UINavigationControllerDelegate>)delegate;
 
 @end
 
 
 @implementation PhotosTableViewController
 
-@synthesize assetsLibrary = assetsLibrary_;
-@synthesize photos        = photos_;
+@synthesize assetsLibrary        = assetsLibrary_;
+@synthesize photos               = photos_;
+@synthesize parentViewController = photoViewController_;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -71,8 +69,18 @@
                                 target:self
                                 action:@selector(_takePhoto:)];
   [takePhotoButton setStyle:UIBarButtonItemStyleBordered];
-  //  [navigationController_.navigationItem setRightBarButtonItem:takePhotoButton];
   [self.navigationItem setRightBarButtonItem:takePhotoButton];
+  
+  // Note:
+  //
+  //  This code snippet is for testing |ALAssetsLibrary+CustomPhotoAlbum| lib's method:
+  //   |-loadPhotosFromAlbum:completion:|.
+  //
+  /*
+  [self.assetsLibrary loadImagesFromAlbum:kKYCustomPhotoAlbumName_
+                               completion:^(NSMutableArray *images, NSError *error) {
+                                 NSLog(@"%s: %@", __PRETTY_FUNCTION__, images);
+                               }];*/
 }
 
 - (void)viewDidUnload
@@ -83,7 +91,30 @@
 - (void)didReceiveMemoryWarning
 {
   [super didReceiveMemoryWarning];
+  
   // Dispose of any resources that can be recreated.
+  assetsLibrary_       = nil;
+  photoViewController_ = nil;
+}
+
+#pragma mark - Custom Getter
+
+- (ALAssetsLibrary *)assetsLibrary
+{
+  if (assetsLibrary_) {
+    return assetsLibrary_;
+  }
+  assetsLibrary_ = [[ALAssetsLibrary alloc] init];
+  return assetsLibrary_;
+}
+
+- (PhotoViewController *)photoViewController
+{
+  if (photoViewController_) {
+    return photoViewController_;
+  }
+  photoViewController_ = [[PhotoViewController alloc] init];
+  return photoViewController_;
 }
 
 #pragma mark - Table view data source
@@ -110,7 +141,7 @@
                                             reuseIdentifier:cellIdentifier];
   
   // Configure the cell...
-  [cell.textLabel setText:[self.photos objectAtIndex:indexPath.row]];
+  [cell.textLabel setText:(self.photos)[indexPath.row]];
   return cell;
 }
 
@@ -119,12 +150,11 @@
 - (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  PhotoViewController * photoViewController = [[PhotoViewController alloc] init];
-  [self.navigationController pushViewController:photoViewController animated:YES];
+  [self.navigationController pushViewController:self.photoViewController animated:NO];
   
   // Get image from Custom Photo Album for the selected photo url.
-  __weak PhotoViewController * weakPhotoViewController = photoViewController;
-  [self.assetsLibrary assetForURL:[NSURL URLWithString:[self.photos objectAtIndex:indexPath.row]]
+  __weak PhotoViewController * weakPhotoViewController = self.photoViewController;
+  [self.assetsLibrary assetForURL:[NSURL URLWithString:(self.photos)[indexPath.row]]
                       resultBlock:^(ALAsset *asset) {
                         //
                         //  thumbnail: asset.thumbnail
@@ -145,30 +175,16 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 // Take photo
 - (void)_takePhoto:(id)sender
 {
-  if (! [self _startCameraControllerFromViewController:self
-                                         usingDelegate:self]) {
-    UIAlertView * alertView = [UIAlertView alloc];
-    (void)[alertView initWithTitle:@"Camera Unavailable"
-                           message:@"Sorry, camera unavailable for the current device."
-                          delegate:self
-                 cancelButtonTitle:@"Cancel"
-                 otherButtonTitles:nil, nil];
-    [alertView show];
+  if (! [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+    [[[UIAlertView alloc] initWithTitle:@"Camera Unavailable"
+                                message:@"Sorry, camera unavailable for the current device."
+                               delegate:self
+                      cancelButtonTitle:@"Cancel"
+                      otherButtonTitles:nil, nil] show];
+    return;
   }
-  return;
-}
-
-// verifies the prerequisites are satisfied by way of its method signature
-//   and a conditional test, and goes on to instantiate, configure,
-//   and asynchronously present the camera user interface full screen
-- (BOOL)_startCameraControllerFromViewController:(UIViewController *)controller
-                                   usingDelegate:(id <UIImagePickerControllerDelegate,
-                                                  UINavigationControllerDelegate>)delegate
-{
-  if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == NO)
-      || delegate == nil
-      || controller == nil) return NO;
   
+  // Generate picker
   UIImagePickerController * picker = [[UIImagePickerController alloc] init];
   picker.sourceType = UIImagePickerControllerSourceTypeCamera;
   
@@ -176,19 +192,20 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   //   movie capture, if both are available:
   //picker.mediaTypes =
   //  [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-  picker.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeImage];
+  picker.mediaTypes = @[(NSString *)kUTTypeImage];
   
   // Hides the controls for moving & scaling pictures, or for
   //   trimming movies. To instead show the controls, use YES.
   picker.allowsEditing = NO;
-  picker.delegate      = delegate;
+  picker.delegate      = self;
   
-  [controller presentModalViewController:picker animated:YES];
-  
-  // No need to release here, as it'll be released after camera action done
-  //   in |imagePickerControllerDidCancel:| method
-  // [picker release];
-  return YES;
+  if ([self.navigationController respondsToSelector:
+       @selector(presentViewController:animated:completion:)])
+  {
+    [self.navigationController presentViewController:picker animated:YES completion:nil];
+  } else {
+    [self.navigationController presentModalViewController:picker animated:YES];
+  }
 }
 
 #pragma mark - UIImagePickerController Delegate
@@ -196,102 +213,101 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 // For responding to the user tapping Cancel.
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-  // Prior to iOS 5.0, if a view did not have a parent view controller
-  //   and was being presented modally, the view controller that was presenting
-  //   it would be returned.
-  // This is no longer the case. You can get the presenting view controller
-  //   using the presentingViewController property.
-  //
-  // Guess |parentViewController| is nil on iOS 5 and that is why the controller
-  //   will not dismiss.
-  // Replacing |parentViewController| with |presentingViewController| will fix
-  //   this issue.
-  //
-  // However, you'll have to check for the existence of presentingViewController
-  //   on UIViewController to provide behavior for iOS versions < 5.0
-  if ([picker respondsToSelector:@selector(presentingViewController)])
-    [[picker presentingViewController] dismissModalViewControllerAnimated:YES];
-  else
-    [[picker parentViewController] dismissModalViewControllerAnimated:YES];
+  if ([self.navigationController respondsToSelector:
+       @selector(presentViewController:animated:completion:)])
+  {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+  } else {
+    // Prior to iOS 5.0, if a view did not have a parent view controller
+    //   and was being presented modally, the view controller that was presenting
+    //   it would be returned.
+    // This is no longer the case. You can get the presenting view controller
+    //   using the presentingViewController property.
+    //
+    // Guess |parentViewController| is nil on iOS 5 and that is why the controller
+    //   will not dismiss.
+    // Replacing |parentViewController| with |presentingViewController| will fix
+    //   this issue.
+    //
+    // However, you'll have to check for the existence of presentingViewController
+    //   on UIViewController to provide behavior for iOS versions < 5.0
+    if ([picker respondsToSelector:@selector(presentingViewController)]) {
+      [[picker presentingViewController] dismissModalViewControllerAnimated:YES];
+    } else {
+      [[picker parentViewController] dismissModalViewControllerAnimated:YES];
+    }
+  }
+  
+  picker.delegate = nil;
+  picker          = nil;
 }
 
 // For responding to the user accepting a newly-captured picture or movie
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-  // dismiss image picker view
-  [self dismissModalViewControllerAnimated:YES];
+  // Dismiss image picker view
+  [self imagePickerControllerDidCancel:picker];
   
-  // manage the media (photo)
-  NSString * mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-  
+  // Manage the media (photo)
+  NSString * mediaType = info[UIImagePickerControllerMediaType];
   // Handle a still image capture
-  if (CFStringCompare((CFStringRef)mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) {
-    // manage tasks in background thread
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      UIImage * imageToSave = nil;
-      UIImage * editedImage = (UIImage *)[info objectForKey:UIImagePickerControllerEditedImage];
-      if (editedImage) imageToSave = editedImage;
-      else imageToSave = (UIImage *)[info objectForKey:UIImagePickerControllerOriginalImage];
-      
-      UIImage * finalImageToSave = nil;
-      /* Modify image's size before save it to photos album
-       *
-       *  CGSize sizeToSave = CGSizeMake(imageToSave.size.width, imageToSave.size.height);
-       *  UIGraphicsBeginImageContextWithOptions(sizeToSave, NO, 0.f);
-       *  [imageToSave drawInRect:CGRectMake(0.f, 0.f, sizeToSave.width, sizeToSave.height)];
-       *  finalImageToSave = UIGraphicsGetImageFromCurrentImageContext();
-       *  UIGraphicsEndImageContext();
-       */
-      finalImageToSave = imageToSave;
-      
-      /*/ Get the image metadata
-      UIImagePickerControllerSourceType pickerType = picker.sourceType;
-      if (pickerType == UIImagePickerControllerSourceTypeCamera) {
-        NSDictionary * imageMetadata = [info objectForKey:UIImagePickerControllerMediaMetadata];
-        NSLog(@"%@", imageMetadata);
-        
-        // Get the assets library
-        ALAssetsLibrary * library = [[ALAssetsLibrary alloc] init];
-        ALAssetsLibraryWriteImageCompletionBlock imageWriteCompletionBlock =
-        ^(NSURL *newURL, NSError *error) {
-          if (error) {
-            NSLog( @"Error writing image with metadata to Photo Library: %@", error );
-          } else {
-            NSLog( @"Wrote image with metadata to Photo Library");
-          }
-        };
-        
-        // Save the new image (original or edited) to the Camera Roll
-        [library writeImageToSavedPhotosAlbum:[finalImageToSave CGImage]
-                                     metadata:imageMetadata
-                              completionBlock:imageWriteCompletionBlock];
-      }*/
-      
-      // The completion block to be executed after image taking action process done
-      void (^completion)(NSURL *, NSError *) = ^(NSURL *assetURL, NSError *error) {
-        if (error) NSLog(@"!!!ERROR,  write the image data to the assets library (camera roll): %@",
-                         [error description]);
-        NSLog(@"*** URL %@ | %@ || type: %@ ***", assetURL, [assetURL absoluteString], [assetURL class]);
-        // Add new one to |photos_|
-        [self.photos addObject:[assetURL absoluteString]];
-        // Reload tableview data
-        [self.tableView reloadData];
-      };
-      
-      void (^failure)(NSError *) = ^(NSError *error) {
-        if (error == nil) return;
-        NSLog(@"!!!ERROR, failed to add the asset to the custom photo album: %@", [error description]);
-      };
-      
-      // save image to custom photo album
-      if (! self.assetsLibrary) assetsLibrary_ = [[ALAssetsLibrary alloc] init];
-      [self.assetsLibrary saveImage:finalImageToSave
-                            toAlbum:kKYCustomPhotoAlbumName_
-                         completion:completion
-                            failure:failure];
-    });
+  CFStringRef mediaTypeRef = (__bridge CFStringRef)mediaType;
+  if (CFStringCompare(mediaTypeRef,
+                      kUTTypeImage,
+                      kCFCompareCaseInsensitive) != kCFCompareEqualTo)
+  {
+    CFRelease(mediaTypeRef);
+    return;
   }
+  CFRelease(mediaTypeRef);
+  
+  // Manage tasks in background thread
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    UIImage * imageToSave = nil;
+    UIImage * editedImage = (UIImage *)info[UIImagePickerControllerEditedImage];
+    if (editedImage) imageToSave = editedImage;
+    else imageToSave = (UIImage *)info[UIImagePickerControllerOriginalImage];
+    
+    UIImage * finalImageToSave = nil;
+    /* Modify image's size before save it to photos album
+     *
+     *  CGSize sizeToSave = CGSizeMake(imageToSave.size.width, imageToSave.size.height);
+     *  UIGraphicsBeginImageContextWithOptions(sizeToSave, NO, 0.f);
+     *  [imageToSave drawInRect:CGRectMake(0.f, 0.f, sizeToSave.width, sizeToSave.height)];
+     *  finalImageToSave = UIGraphicsGetImageFromCurrentImageContext();
+     *  UIGraphicsEndImageContext();
+     */
+    finalImageToSave = imageToSave;
+    
+    // The completion block to be executed after image taking action process done
+    void (^completion)(NSURL *, NSError *) = ^(NSURL *assetURL, NSError *error) {
+      if (error) NSLog(@"!!!ERROR,  write the image data to the assets library (camera roll): %@",
+                       [error description]);
+      NSLog(@"*** URL %@ | %@ || type: %@ ***", assetURL, [assetURL absoluteString], [assetURL class]);
+      // Add new item to |photos_| & table view appropriately
+      NSIndexPath * indexPath = [NSIndexPath indexPathForRow:self.photos.count
+                                                   inSection:0];
+      [self.photos addObject:[assetURL absoluteString]];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                              withRowAnimation:UITableViewRowAnimationFade];
+      });
+    };
+    
+    void (^failure)(NSError *) = ^(NSError *error) {
+      if (error == nil) return;
+      NSLog(@"!!!ERROR, failed to add the asset to the custom photo album: %@", [error description]);
+    };
+    
+    // Save image to custom photo album
+    // The lifetimes of objects you get back from a library instance are tied to
+    //   the lifetime of the library instance.
+    [self.assetsLibrary saveImage:finalImageToSave
+                          toAlbum:kKYCustomPhotoAlbumName_
+                       completion:completion
+                          failure:failure];
+  });
 }
 
 @end

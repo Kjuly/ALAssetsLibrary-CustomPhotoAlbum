@@ -31,8 +31,13 @@
 
 - (void)loadView
 {
-  CGFloat height = (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1
+  // iOS 5 SDK does not defined NSFoundationVersionNumber_iOS_6_1
+#ifdef NSFoundationVersionNumber_iOS_6_1
+  CGFloat height = (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1
                     ?  kKYViewHeight : kKYViewHeight + kKYStatusBarHeight);
+#else
+  CGFloat height = kKYViewHeight;
+#endif
   UIView * view = [[UIView alloc] initWithFrame:(CGRect){CGPointZero, {kKYViewWidth, height}}];
   [view setBackgroundColor:[UIColor whiteColor]];
   self.view = view;
@@ -43,8 +48,12 @@
   [super viewDidLoad];
   
   // Photo view
-  CGFloat originY = (floor(NSFoundationVersionNumber) <= NSFoundationVersionNumber_iOS_6_1
-                     ?  0.f : kKYStatusBarHeight);
+#ifdef NSFoundationVersionNumber_iOS_6_1
+  CGFloat originY = (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1
+                     ? 0.f : kKYStatusBarHeight);
+#else
+  CGFloat originY = 0.f;
+#endif
   CGRect photoViewFrame = CGRectMake(0.f, originY, kKYViewWidth, kKYViewHeight);
   photoView_ = [[UIImageView alloc] initWithFrame:photoViewFrame];
   [photoView_ setContentMode:UIViewContentModeScaleAspectFill];
@@ -68,13 +77,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  [self.navigationController setNavigationBarHidden:YES animated:YES];
+  [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
   [super viewWillDisappear:animated];
-  [self.navigationController setNavigationBarHidden:NO animated:YES];
+  [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,7 +97,7 @@
 // Back to previous view
 - (void)_back:(id)sender
 {
-  [self.navigationController popViewControllerAnimated:YES];
+  [self.navigationController popViewControllerAnimated:NO];
 }
 
 #pragma mark - Public Method
