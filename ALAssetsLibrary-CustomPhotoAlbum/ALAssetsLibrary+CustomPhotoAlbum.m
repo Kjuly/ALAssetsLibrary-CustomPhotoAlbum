@@ -288,7 +288,10 @@
 {
   ALAssetsLibraryGroupsEnumerationResultsBlock block = ^(ALAssetsGroup *group, BOOL *stop) {
     // Checking if library exists
-    if (group == nil) *stop = YES;
+    if (group == nil) {
+      *stop = YES;
+      return;
+    }
     
     // If we have found library with given title we enumerate it
     if ([albumName compare:[group valueForProperty:ALAssetsGroupPropertyName]] == NSOrderedSame) {
