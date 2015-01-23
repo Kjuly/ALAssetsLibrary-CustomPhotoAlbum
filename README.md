@@ -62,6 +62,7 @@ Write the image data with meta data to the assets library (camera roll).
 [@speedyapocalypse](https://github.com/speedyapocalypse)  
 [@blazingpair](https://github.com/blazingpair) ([@paulz](https://github.com/paulz))  
 [@ajcollins](https://github.com/ajcollins)  
+[@wka](https://github.com/wka)  
 
 [1]: http://developer.apple.com/library/ios/#documentation/AssetsLibrary/Reference/ALAssetsLibrary_Class/Reference/Reference.html#//apple_ref/occ/instm/ALAssetsLibrary/addAssetsGroupAlbumWithName:resultBlock:failureBlock:
 [2]: http://www.touch-code-magazine.com/ios5-saving-photos-in-custom-photo-album-category-for-download/
