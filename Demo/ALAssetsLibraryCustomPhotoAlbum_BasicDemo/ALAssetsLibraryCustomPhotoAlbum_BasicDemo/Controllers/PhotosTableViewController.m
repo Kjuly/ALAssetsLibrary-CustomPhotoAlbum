@@ -166,7 +166,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                           [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage]];
                       }
                      failureBlock:^(NSError *error) {
-                       NSLog(@"!!!ERROR: cannot get image: %@", [error description]);
+                       NSLog(@"%s: Cannot get image: %@", __PRETTY_FUNCTION__, [error description]);
                      }];
 }
 
@@ -264,10 +264,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
   
   // Manage tasks in background thread
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    UIImage * imageToSave = nil;
     UIImage * editedImage = (UIImage *)info[UIImagePickerControllerEditedImage];
-    if (editedImage) imageToSave = editedImage;
-    else imageToSave = (UIImage *)info[UIImagePickerControllerOriginalImage];
+    UIImage * imageToSave = (editedImage ?: (UIImage *)info[UIImagePickerControllerOriginalImage]);
     
     UIImage * finalImageToSave = nil;
     /* Modify image's size before save it to photos album
@@ -282,9 +280,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     // The completion block to be executed after image taking action process done
     void (^completion)(NSURL *, NSError *) = ^(NSURL *assetURL, NSError *error) {
-      if (error) NSLog(@"!!!ERROR,  write the image data to the assets library (camera roll): %@",
-                       [error description]);
-      NSLog(@"*** URL %@ | %@ || type: %@ ***", assetURL, [assetURL absoluteString], [assetURL class]);
+      if (error) {
+        NSLog(@"%s: Write the image data to the assets library (camera roll): %@",
+              __PRETTY_FUNCTION__, [error localizedDescription]);
+      }
+      
+      NSLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
+            assetURL, [assetURL absoluteString], [assetURL class]);
       // Add new item to |photos_| & table view appropriately
       NSIndexPath * indexPath = [NSIndexPath indexPathForRow:self.photos.count
                                                    inSection:0];
@@ -296,8 +298,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     };
     
     void (^failure)(NSError *) = ^(NSError *error) {
-      if (error == nil) return;
-      NSLog(@"!!!ERROR, failed to add the asset to the custom photo album: %@", [error description]);
+      if (error) NSLog(@"%s: Failed to add the asset to the custom photo album: %@",
+                       __PRETTY_FUNCTION__, [error localizedDescription]);
     };
     
     // Save image to custom photo album
