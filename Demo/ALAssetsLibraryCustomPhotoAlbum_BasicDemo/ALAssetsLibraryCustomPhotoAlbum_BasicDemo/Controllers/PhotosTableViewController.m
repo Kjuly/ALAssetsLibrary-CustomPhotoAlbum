@@ -25,7 +25,7 @@
 }
 
 @property (nonatomic, strong) ALAssetsLibrary     * assetsLibrary;
-@property (nonatomic, copy)   NSMutableArray      * photos;
+@property (nonatomic, strong) NSMutableArray      * photos;
 @property (nonatomic, strong) PhotoViewController * photoViewController;
 
 - (void)_takePhoto:(id)sender;
