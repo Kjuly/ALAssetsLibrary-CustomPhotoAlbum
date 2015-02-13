@@ -13,5 +13,6 @@ Pod::Spec.new do |s|
   s.source_files = 'ALAssetsLibrary-CustomPhotoAlbum'
 
   s.frameworks = 'UIKit', 'AssetsLibrary'
+  s.weak_framework = 'Photos'
 end
 
