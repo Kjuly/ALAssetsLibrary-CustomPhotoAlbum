@@ -1,4 +1,4 @@
-ALAssetsLibrary-CustomPhotoAlbum (v1.2.2)
+ALAssetsLibrary-CustomPhotoAlbum (v1.3.0)
 =========================================
 
 A nice ALAssetsLibrary category for saving images into custom photo album by @MarinTodorov.

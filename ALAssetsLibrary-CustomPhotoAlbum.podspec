@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ALAssetsLibrary-CustomPhotoAlbum"
-  s.version          = "1.2.2"
+  s.version          = "1.3.0"
   s.summary          = "A nice ALAssetsLibrary category for saving images & videos into custom photo album."
   s.homepage         = "https://github.com/Kjuly/ALAssetsLibrary-CustomPhotoAlbum"
   s.license          = 'MIT'
