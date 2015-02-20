@@ -20,12 +20,12 @@
 @interface PhotosTableViewController () {
  @private
   ALAssetsLibrary     * assetsLibrary_;
-  NSMutableArray      * photos_;
+  NSMutableArray      * photoURLs_;
   PhotoViewController * photoViewController_;
 }
 
 @property (nonatomic, strong) ALAssetsLibrary     * assetsLibrary;
-@property (nonatomic, copy)   NSMutableArray      * photos;
+@property (nonatomic, strong) NSMutableArray      * photoURLs;
 @property (nonatomic, strong) PhotoViewController * photoViewController;
 
 - (void)_takePhoto:(id)sender;
@@ -36,15 +36,13 @@
 @implementation PhotosTableViewController
 
 @synthesize assetsLibrary        = assetsLibrary_;
-@synthesize photos               = photos_;
+@synthesize photoURLs            = photoURLs_;
 @synthesize parentViewController = photoViewController_;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
   if (self = [super initWithStyle:style]) {
-    // Custom initialization
-    [self setTitle:@"Demo"];
-    photos_ = [[NSMutableArray alloc] init];
+    photoURLs_ = [[NSMutableArray alloc] init];
   }
   return self;
 }
@@ -52,12 +50,8 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-
-  // Uncomment the following line to preserve selection between presentations.
-  // self.clearsSelectionOnViewWillAppear = NO;
- 
-  // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-  // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+  
+  [self setTitle:@"Demo"];
   
   // Right bar button (Take Photo) on navigation bar
   UIBarButtonItem * takePhotoButton = [UIBarButtonItem alloc];
@@ -129,7 +123,7 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-  return [self.photos count];
+  return [self.photoURLs count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -141,7 +135,8 @@
                                             reuseIdentifier:cellIdentifier];
   
   // Configure the cell...
-  [cell.textLabel setText:(self.photos)[indexPath.row]];
+  NSURL * photoURL = (NSURL *)(self.photoURLs)[indexPath.row];
+  [cell.textLabel setText:[photoURL absoluteString]];
   return cell;
 }
 
@@ -154,7 +149,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   
   // Get image from Custom Photo Album for the selected photo url.
   __weak PhotoViewController * weakPhotoViewController = self.photoViewController;
-  [self.assetsLibrary assetForURL:[NSURL URLWithString:(self.photos)[indexPath.row]]
+  [self.assetsLibrary assetForURL:(self.photoURLs)[indexPath.row]
                       resultBlock:^(ALAsset *asset) {
                         //
                         //  thumbnail: asset.thumbnail
@@ -288,9 +283,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
       NSLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
             assetURL, [assetURL absoluteString], [assetURL class]);
       // Add new item to |photos_| & table view appropriately
-      NSIndexPath * indexPath = [NSIndexPath indexPathForRow:self.photos.count
+      NSIndexPath * indexPath = [NSIndexPath indexPathForRow:self.photoURLs.count
                                                    inSection:0];
-      [self.photos addObject:[assetURL absoluteString]];
+      [self.photoURLs addObject:assetURL];
       dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView insertRowsAtIndexPaths:@[indexPath]
                               withRowAnimation:UITableViewRowAnimationFade];

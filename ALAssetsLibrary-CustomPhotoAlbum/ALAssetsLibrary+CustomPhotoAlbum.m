@@ -197,39 +197,35 @@
         // Different code for iOS 7 and 8
         // See: http://stackoverflow.com/questions/26003211/assetslibrary-framework-broken-on-ios-8
         // See: http://stackoverflow.com/questions/8867496/get-last-image-from-photos-app/8872425#8872425
-        // PHPhotoLibrary_class will only be non-nil on iOS 8.x.
+        // PHPhotoLibrary_class will only be non-nil on iOS 8.0 or later.
         Class PHPhotoLibrary_class = NSClassFromString(@"PHPhotoLibrary");
         
         if (PHPhotoLibrary_class) {
-          /**
-           *
-           iOS 8.x. . code that has to be called dynamically at runtime and will not link on iOS 7.x.
-           
-          [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-            [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:title];
-          } completionHandler:^(BOOL success, NSError *error) {
-            if (!success) {
-              NSLog(@"Error creating album: %@", error);
-            }
-          }];
-           
-          */
-          
           // dynamic runtime code for code chunk listed above
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
           id sharedPhotoLibrary = [PHPhotoLibrary_class performSelector:NSSelectorFromString(@"sharedPhotoLibrary")];
 #pragma clang diagnostic pop
           
-          SEL performChanges = NSSelectorFromString(@"performChanges:completionHandler:");
+          BOOL shouldInvokeSuccessBlockInMainThread = ([NSThread currentThread] == [NSThread mainThread]);
           
-          NSMethodSignature *methodSig = [sharedPhotoLibrary methodSignatureForSelector:performChanges];
+          SEL performChanges;
+          if (shouldInvokeSuccessBlockInMainThread) {
+            // Synchronously runs a block that requests changes to be performed in the Photos library
+            performChanges = NSSelectorFromString(@"performChangesAndWait:error:");
+          } else {
+            // Asynchronously runs a block that requests changes to be performed in the Photos library
+            performChanges = NSSelectorFromString(@"performChanges:completionHandler:");
+          }
           
-          NSInvocation* inv = [NSInvocation invocationWithMethodSignature:methodSig];
-          [inv setTarget:sharedPhotoLibrary];
-          [inv setSelector:performChanges];
+          NSMethodSignature * methodSignature = [sharedPhotoLibrary methodSignatureForSelector:performChanges];
           
-          void(^firstBlock)() = ^void() {
+          NSInvocation * invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+          [invocation setTarget:sharedPhotoLibrary];
+          [invocation setSelector:performChanges];
+          
+          // Set the |changeBlock| for |-performChangesAndWait:error:| or |-performChanges:completionHandler:|.
+          void (^changeBlock)() = ^{
             Class PHAssetCollectionChangeRequest_class = NSClassFromString(@"PHAssetCollectionChangeRequest");
             SEL creationRequestForAssetCollectionWithTitle = NSSelectorFromString(@"creationRequestForAssetCollectionWithTitle:");
 #pragma clang diagnostic push
@@ -237,30 +233,58 @@
             [PHAssetCollectionChangeRequest_class performSelector:creationRequestForAssetCollectionWithTitle withObject:albumName];
 #pragma clang diagnostic pop
           };
+          [invocation setArgument:&changeBlock atIndex:2];
           
-          void (^secondBlock)(BOOL success, NSError *error) = ^void(BOOL success, NSError *error) {
-            if (success) {
-              [self enumerateGroupsWithTypes:ALAssetsGroupAlbum usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                if (group) {
-                  NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
-                  if ([albumName isEqualToString:name]) {
-                    addPhotoToLibraryBlock(group);
-                  }
-                }
-              } failureBlock:failure];
-            }
-            
-            if (error) {
-              NSLog(@"Error creating album: %@", error);
-            }
+          // Block to be invoked after created album succeed.
+          void (^blockToEnumerateGroups)() = ^{
+            [self enumerateGroupsWithTypes:ALAssetsGroupAlbum
+                                usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                                  if (group) {
+                                    NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
+                                    if ([albumName isEqualToString:name]) {
+                                      addPhotoToLibraryBlock(group);
+                                    }
+                                  }
+                                }
+                              failureBlock:failure];
           };
           
-          // Set the first and second blocks.
-          [inv setArgument:&firstBlock atIndex:2];
-          [inv setArgument:&secondBlock atIndex:3];
-          
-          [inv invoke];
-          
+          // Setup invocation to perfom selector |-performChangesAndWait:error:| in main thread.
+          if (shouldInvokeSuccessBlockInMainThread) {
+            // Set error point for |-performChangesAndWait:error:|.
+            NSError * error = nil;
+            [invocation setArgument:&error atIndex:3];
+            [invocation invoke];
+            
+            // Get return value of |-performChangesAndWait:error:|.
+            BOOL createAlbumSucceed;
+            [invocation getReturnValue:&createAlbumSucceed];
+            
+            if (createAlbumSucceed) {
+              blockToEnumerateGroups();
+            } else {
+              if (error) {
+                NSLog(@"%s: Error creating album (%@) :  %@",
+                      __PRETTY_FUNCTION__, albumName, [error localizedDescription]);
+              }
+            }
+          }
+          // Setup invocation to perfom selector |-performChanges:completionHandler:| in non-main thread.
+          else {
+            void (^completionHandler)(BOOL success, NSError *error) = ^(BOOL success, NSError *error) {
+              if (success) {
+                blockToEnumerateGroups();
+              } else {
+                if (error) {
+                  NSLog(@"%s: Error creating album (%@) : %@",
+                        __PRETTY_FUNCTION__, albumName, [error localizedDescription]);
+                }
+              }
+            };
+            // Set the |completionHandler| for |-performChanges:completionHandler:|.
+            [invocation setArgument:&completionHandler atIndex:3];
+            [invocation invoke];
+          }
         }
         else {
           // code that always creates an album on iOS 7.x.x but fails
