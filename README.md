@@ -46,6 +46,7 @@ Write the image data with meta data to the assets library (camera roll).
 
   1. AssetsLibrary.framework
   2. MobileCoreServices.framework
+  3. Photos.framework (for iOS 8+ projects)
 
 
 # REFERENCE
