@@ -85,9 +85,9 @@
     //   or if the asset could not be added to the group.
     else {
       NSString * message = [NSString stringWithFormat:@"ALAssetsGroup failed to add asset: %@.", asset];
-      failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
-                                  code:0
-                              userInfo:@{NSLocalizedDescriptionKey : message}]);
+      if (failure) failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
+                                               code:0
+                                           userInfo:@{NSLocalizedDescriptionKey : message}]);
     }
   };
 }
