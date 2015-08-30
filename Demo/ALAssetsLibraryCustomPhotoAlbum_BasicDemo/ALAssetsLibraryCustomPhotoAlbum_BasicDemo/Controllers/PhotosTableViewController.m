@@ -12,21 +12,18 @@
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
-
 // Name for the custom photo album
 #define kKYCustomPhotoAlbumName_ @"Custom Photo Album"
 
 
 @interface PhotosTableViewController () {
  @private
-  ALAssetsLibrary     * assetsLibrary_;
-  NSMutableArray      * photoURLs_;
-  PhotoViewController * photoViewController_;
+  ALAssetsLibrary * assetsLibrary_;
+  NSMutableArray  * photoURLs_;
 }
 
-@property (nonatomic, strong) ALAssetsLibrary     * assetsLibrary;
-@property (nonatomic, strong) NSMutableArray      * photoURLs;
-@property (nonatomic, strong) PhotoViewController * photoViewController;
+@property (nonatomic, strong) ALAssetsLibrary * assetsLibrary;
+@property (nonatomic, strong) NSMutableArray  * photoURLs;
 
 - (void)_takePhoto:(id)sender;
 
@@ -35,9 +32,8 @@
 
 @implementation PhotosTableViewController
 
-@synthesize assetsLibrary        = assetsLibrary_;
-@synthesize photoURLs            = photoURLs_;
-@synthesize parentViewController = photoViewController_;
+@synthesize assetsLibrary = assetsLibrary_;
+@synthesize photoURLs     = photoURLs_;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -89,8 +85,7 @@
   [super didReceiveMemoryWarning];
   
   // Dispose of any resources that can be recreated.
-  assetsLibrary_       = nil;
-  photoViewController_ = nil;
+  assetsLibrary_ = nil;
 }
 
 #pragma mark - Custom Getter
@@ -102,15 +97,6 @@
   }
   assetsLibrary_ = [[ALAssetsLibrary alloc] init];
   return assetsLibrary_;
-}
-
-- (PhotoViewController *)photoViewController
-{
-  if (photoViewController_) {
-    return photoViewController_;
-  }
-  photoViewController_ = [[PhotoViewController alloc] init];
-  return photoViewController_;
 }
 
 #pragma mark - Table view data source
@@ -147,24 +133,26 @@
 - (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  [self.navigationController pushViewController:self.photoViewController animated:NO];
-  
-  // Get image from Custom Photo Album for the selected photo url.
-  __weak PhotoViewController * weakPhotoViewController = self.photoViewController;
-  [self.assetsLibrary assetForURL:(self.photoURLs)[indexPath.row]
-                      resultBlock:^(ALAsset *asset) {
-                        //
-                        //  thumbnail: asset.thumbnail
-                        //             asset.aspectRatioThumbnail
-                        // fullscreen: asset.defaultRepresentation.fullScreenImage
-                        //             asset.defaultRepresentation.fullResolutionImage
-                        //
-                        [weakPhotoViewController updateWithImage:
-                          [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage]];
-                      }
-                     failureBlock:^(NSError *error) {
-                       NSLog(@"%s: Cannot get image: %@", __PRETTY_FUNCTION__, [error description]);
-                     }];
+  PhotoViewController * photoViewController = [[PhotoViewController alloc] init];
+  [photoViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+  [photoViewController setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+  [self presentViewController:photoViewController animated:YES completion:^{
+    // Get image from Custom Photo Album for the selected photo url.
+    [self.assetsLibrary assetForURL:(self.photoURLs)[indexPath.row]
+                        resultBlock:^(ALAsset *asset) {
+                          //
+                          //  thumbnail: asset.thumbnail
+                          //             asset.aspectRatioThumbnail
+                          // fullscreen: asset.defaultRepresentation.fullScreenImage
+                          //             asset.defaultRepresentation.fullResolutionImage
+                          //
+                          [photoViewController updateWithImage:
+                            [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage]];
+                        }
+                       failureBlock:^(NSError *error) {
+                         NSLog(@"%s: Cannot get image: %@", __PRETTY_FUNCTION__, [error description]);
+                       }];
+  }];
 }
 
 #pragma mark - Private Method
@@ -183,6 +171,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   
   // Generate picker
   UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+  picker.delegate = self;
   picker.sourceType = UIImagePickerControllerSourceTypeCamera;
   
   // Displays a control that allows the user to choose picture or
@@ -194,15 +183,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
   // Hides the controls for moving & scaling pictures, or for
   //   trimming movies. To instead show the controls, use YES.
   picker.allowsEditing = NO;
-  picker.delegate      = self;
   
-  if ([self.navigationController respondsToSelector:
-       @selector(presentViewController:animated:completion:)])
-  {
-    [self.navigationController presentViewController:picker animated:YES completion:nil];
-  } else {
-    [self.navigationController presentModalViewController:picker animated:YES];
-  }
+  [self presentViewController:picker animated:YES completion:nil];
 }
 
 #pragma mark - UIImagePickerController Delegate
@@ -210,33 +192,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 // For responding to the user tapping Cancel.
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-  if ([self.navigationController respondsToSelector:
-       @selector(presentViewController:animated:completion:)])
-  {
-    [picker dismissViewControllerAnimated:YES completion:nil];
-  } else {
-    // Prior to iOS 5.0, if a view did not have a parent view controller
-    //   and was being presented modally, the view controller that was presenting
-    //   it would be returned.
-    // This is no longer the case. You can get the presenting view controller
-    //   using the presentingViewController property.
-    //
-    // Guess |parentViewController| is nil on iOS 5 and that is why the controller
-    //   will not dismiss.
-    // Replacing |parentViewController| with |presentingViewController| will fix
-    //   this issue.
-    //
-    // However, you'll have to check for the existence of presentingViewController
-    //   on UIViewController to provide behavior for iOS versions < 5.0
-    if ([picker respondsToSelector:@selector(presentingViewController)]) {
-      [[picker presentingViewController] dismissModalViewControllerAnimated:YES];
-    } else {
-      [[picker parentViewController] dismissModalViewControllerAnimated:YES];
-    }
-  }
-  
+  [picker dismissViewControllerAnimated:YES completion:nil];
   picker.delegate = nil;
-  picker          = nil;
 }
 
 // For responding to the user accepting a newly-captured picture or movie
@@ -307,6 +264,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                        completion:completion
                           failure:failure];
   });
+}
+
+#pragma mark - PhotoViewControllerDelegate
+
+- (void)shouldDismissPhotoViewController:(PhotoViewController *)controller
+{
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

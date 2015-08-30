@@ -15,7 +15,7 @@
 
 @property (nonatomic, strong) UIImageView * photoView;
 
-- (void)_back:(id)sender;
+- (void)_handleTapGesture:(UITapGestureRecognizer *)recognizer;
 
 @end
 
@@ -62,22 +62,10 @@
   
   // Tap gesture on view
   UITapGestureRecognizer * tapGestureRecognizer = [UITapGestureRecognizer alloc];
-  (void)[tapGestureRecognizer initWithTarget:self action:@selector(_back:)];
+  (void)[tapGestureRecognizer initWithTarget:self action:@selector(_handleTapGesture:)];
   [tapGestureRecognizer setNumberOfTapsRequired:1];
   [tapGestureRecognizer setNumberOfTouchesRequired:1];
   [self.view addGestureRecognizer:tapGestureRecognizer];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-  [super viewWillAppear:animated];
-  [self.navigationController setNavigationBarHidden:YES animated:NO];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-  [super viewWillDisappear:animated];
-  [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 - (void)didReceiveMemoryWarning
@@ -89,9 +77,9 @@
 #pragma mark - Private Method
 
 // Back to previous view
-- (void)_back:(id)sender
+- (void)_handleTapGesture:(UITapGestureRecognizer *)recognizer
 {
-  [self.navigationController popViewControllerAnimated:NO];
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Public Method

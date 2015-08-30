@@ -33,24 +33,18 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-	// Do any additional setup after loading the view.
   
   // Photos table view controller
-  PhotosTableViewController * photosTableViewController;
-  photosTableViewController = [PhotosTableViewController alloc];
+  PhotosTableViewController * photosTableViewController = [PhotosTableViewController alloc];
   (void)[photosTableViewController initWithStyle:UITableViewStylePlain];
   
   // Main navigation controller
   navigationController_ = [UINavigationController alloc];
   (void)[navigationController_ initWithRootViewController:photosTableViewController];
   [navigationController_.view setFrame:(CGRect){CGPointZero, {kKYViewWidth, kKYViewHeight}}];
+  [self addChildViewController:navigationController_];
   [self.view addSubview:navigationController_.view];
-}
-
-- (void)didReceiveMemoryWarning
-{
-  [super didReceiveMemoryWarning];
-  // Dispose of any resources that can be recreated.
+  [navigationController_ willMoveToParentViewController:self];
 }
 
 @end
