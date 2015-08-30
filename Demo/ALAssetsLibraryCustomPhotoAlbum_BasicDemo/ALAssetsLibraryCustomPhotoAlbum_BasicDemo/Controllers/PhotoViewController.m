@@ -68,12 +68,6 @@
   [self.view addGestureRecognizer:tapGestureRecognizer];
 }
 
-- (void)viewDidUnload
-{
-  [super viewDidUnload];
-  self.photoView = nil;
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
