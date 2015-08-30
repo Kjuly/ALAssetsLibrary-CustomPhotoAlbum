@@ -13,7 +13,6 @@
 		7F83D8ED169A96D60091329A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8EB169A96D60091329A /* InfoPlist.strings */; };
 		7F83D8EF169A96D60091329A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D8EE169A96D60091329A /* main.m */; };
 		7F83D8F3169A96D60091329A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D8F2169A96D60091329A /* AppDelegate.m */; };
-		7F83D90C169A98830091329A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D90B169A98830091329A /* RootViewController.m */; };
 		7F83D90E169A99E40091329A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F83D90D169A99E40091329A /* AssetsLibrary.framework */; };
 		7F83D912169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D911169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
 		7F83D915169A9D090091329A /* PhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D914169A9D090091329A /* PhotosTableViewController.m */; };
@@ -52,8 +51,6 @@
 		7F83D8F0169A96D60091329A /* ALAssetsLibraryCustomPhotoAlbum_BasicDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibraryCustomPhotoAlbum_BasicDemo-Prefix.pch"; sourceTree = "<group>"; };
 		7F83D8F1169A96D60091329A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7F83D8F2169A96D60091329A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		7F83D90A169A98830091329A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		7F83D90B169A98830091329A /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		7F83D90D169A99E40091329A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		7F83D910169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibrary+CustomPhotoAlbum.h"; sourceTree = "<group>"; };
 		7F83D911169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAssetsLibrary+CustomPhotoAlbum.m"; sourceTree = "<group>"; };
@@ -163,8 +160,6 @@
 		7F83D904169A98570091329A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7F83D90A169A98830091329A /* RootViewController.h */,
-				7F83D90B169A98830091329A /* RootViewController.m */,
 				7F83D913169A9D090091329A /* PhotosTableViewController.h */,
 				7F83D914169A9D090091329A /* PhotosTableViewController.m */,
 				7F83D91B169AA9440091329A /* PhotoViewController.h */,
@@ -312,7 +307,6 @@
 			files = (
 				7F83D8EF169A96D60091329A /* main.m in Sources */,
 				7F83D8F3169A96D60091329A /* AppDelegate.m in Sources */,
-				7F83D90C169A98830091329A /* RootViewController.m in Sources */,
 				7F83D912169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 				7F83D915169A9D090091329A /* PhotosTableViewController.m in Sources */,
 				7F83D918169A9F150091329A /* Constants.m in Sources */,
