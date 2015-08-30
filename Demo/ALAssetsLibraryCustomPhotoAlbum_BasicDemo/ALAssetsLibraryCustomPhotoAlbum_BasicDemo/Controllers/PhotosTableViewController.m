@@ -42,7 +42,7 @@
 - (id)initWithStyle:(UITableViewStyle)style
 {
   if (self = [super initWithStyle:style]) {
-    photoURLs_ = [[NSMutableArray alloc] init];
+    
   }
   return self;
 }
@@ -64,6 +64,13 @@
                                 action:@selector(_takePhoto:)];
   [takePhotoButton setStyle:UIBarButtonItemStyleBordered];
   [self.navigationItem setRightBarButtonItem:takePhotoButton];
+  
+  [self.assetsLibrary loadAssetsForProperty:ALAssetPropertyAssetURL
+                                  fromAlbum:kKYCustomPhotoAlbumName_
+                                 completion:^(NSMutableArray *array, NSError *error) {
+                                   self.photoURLs = (array ?: [NSMutableArray array]);
+                                   [self.tableView reloadData];
+                                 }];
   
   // Note:
   //
