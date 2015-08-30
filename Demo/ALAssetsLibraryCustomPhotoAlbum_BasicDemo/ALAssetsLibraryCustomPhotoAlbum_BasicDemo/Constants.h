@@ -12,8 +12,8 @@
 
 // App View Basic
 #define kKYStatusBarHeight 20.f
-#define kKYViewHeight CGRectGetHeight([UIScreen mainScreen].applicationFrame)
-#define kKYViewWidth  CGRectGetWidth([UIScreen mainScreen].applicationFrame)
+#define kKYViewWidth  CGRectGetWidth([UIScreen mainScreen].bounds)
+#define kKYViewHeight CGRectGetHeight([UIScreen mainScreen].bounds)
 
 @interface Constants : NSObject
 
