@@ -46,6 +46,7 @@ Write the image data with meta data to the assets library (camera roll).
 
   1. AssetsLibrary.framework
   2. MobileCoreServices.framework
+  3. Photos.framework (for iOS 8+ projects)
 
 
 # REFERENCE
@@ -64,6 +65,7 @@ Write the image data with meta data to the assets library (camera roll).
 [@ajcollins](https://github.com/ajcollins)  
 [@wka](https://github.com/wka)  
 [@NSFish](https://github.com/NSFish)  
+[@michaelcameron](https://github.com/michaelcameron)  
 
 
 [1]: http://developer.apple.com/library/ios/#documentation/AssetsLibrary/Reference/ALAssetsLibrary_Class/Reference/Reference.html#//apple_ref/occ/instm/ALAssetsLibrary/addAssetsGroupAlbumWithName:resultBlock:failureBlock:

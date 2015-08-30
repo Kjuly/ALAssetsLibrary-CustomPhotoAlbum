@@ -61,6 +61,16 @@
          completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
             failure:(ALAssetsLibraryAccessFailureBlock)failure;
 
+/*! Loads assets w/ desired property from the assets group (album)
+ *
+ * \param property   Property for the asset, refer to ALAsset.h, if not offered, just return instances of ALAsset
+ * \param albumName  Custom album name
+ * \param completion Block to be executed when succeed or failed to load assets from target album
+ */
+- (void)loadAssetsForProperty:(NSString *)property
+                    fromAlbum:(NSString *)albumName
+                   completion:(void (^)(NSMutableArray *array, NSError *error))completion;
+
 /*! Loads assets from the assets group (album)
  *
  * \param albumName Custom album name

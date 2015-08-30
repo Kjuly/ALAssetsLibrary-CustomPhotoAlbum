@@ -13,7 +13,6 @@
 		7F83D8ED169A96D60091329A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D8EB169A96D60091329A /* InfoPlist.strings */; };
 		7F83D8EF169A96D60091329A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D8EE169A96D60091329A /* main.m */; };
 		7F83D8F3169A96D60091329A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D8F2169A96D60091329A /* AppDelegate.m */; };
-		7F83D90C169A98830091329A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D90B169A98830091329A /* RootViewController.m */; };
 		7F83D90E169A99E40091329A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F83D90D169A99E40091329A /* AssetsLibrary.framework */; };
 		7F83D912169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D911169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */; };
 		7F83D915169A9D090091329A /* PhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F83D914169A9D090091329A /* PhotosTableViewController.m */; };
@@ -38,6 +37,7 @@
 		7F83D93F169AB5810091329A /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92D169AB5810091329A /* Icon@2x.png */; };
 		7F83D940169AB5810091329A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92E169AB5810091329A /* iTunesArtwork */; };
 		7F83D941169AB5810091329A /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = 7F83D92F169AB5810091329A /* iTunesArtwork@2x */; };
+		7FF4A94B1AE64EF000BC74CF /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FF4A94A1AE64EF000BC74CF /* Photos.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,8 +51,6 @@
 		7F83D8F0169A96D60091329A /* ALAssetsLibraryCustomPhotoAlbum_BasicDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibraryCustomPhotoAlbum_BasicDemo-Prefix.pch"; sourceTree = "<group>"; };
 		7F83D8F1169A96D60091329A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7F83D8F2169A96D60091329A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		7F83D90A169A98830091329A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		7F83D90B169A98830091329A /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		7F83D90D169A99E40091329A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		7F83D910169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAssetsLibrary+CustomPhotoAlbum.h"; sourceTree = "<group>"; };
 		7F83D911169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAssetsLibrary+CustomPhotoAlbum.m"; sourceTree = "<group>"; };
@@ -81,6 +79,7 @@
 		7F83D92D169AB5810091329A /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		7F83D92E169AB5810091329A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		7F83D92F169AB5810091329A /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
+		7FF4A94A1AE64EF000BC74CF /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FF4A94B1AE64EF000BC74CF /* Photos.framework in Frameworks */,
 				7F83D91A169AA6720091329A /* MobileCoreServices.framework in Frameworks */,
 				7F83D90E169A99E40091329A /* AssetsLibrary.framework in Frameworks */,
 				7F83D8E3169A96D60091329A /* UIKit.framework in Frameworks */,
@@ -120,6 +120,7 @@
 		7F83D8E1169A96D60091329A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7FF4A94A1AE64EF000BC74CF /* Photos.framework */,
 				7F83D8E2169A96D60091329A /* UIKit.framework */,
 				7F83D8E4169A96D60091329A /* Foundation.framework */,
 				7F83D8E6169A96D60091329A /* CoreGraphics.framework */,
@@ -159,8 +160,6 @@
 		7F83D904169A98570091329A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7F83D90A169A98830091329A /* RootViewController.h */,
-				7F83D90B169A98830091329A /* RootViewController.m */,
 				7F83D913169A9D090091329A /* PhotosTableViewController.h */,
 				7F83D914169A9D090091329A /* PhotosTableViewController.m */,
 				7F83D91B169AA9440091329A /* PhotoViewController.h */,
@@ -308,7 +307,6 @@
 			files = (
 				7F83D8EF169A96D60091329A /* main.m in Sources */,
 				7F83D8F3169A96D60091329A /* AppDelegate.m in Sources */,
-				7F83D90C169A98830091329A /* RootViewController.m in Sources */,
 				7F83D912169A9A8C0091329A /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 				7F83D915169A9D090091329A /* PhotosTableViewController.m in Sources */,
 				7F83D918169A9F150091329A /* Constants.m in Sources */,

@@ -85,9 +85,9 @@
     //   or if the asset could not be added to the group.
     else {
       NSString * message = [NSString stringWithFormat:@"ALAssetsGroup failed to add asset: %@.", asset];
-      failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
-                                  code:0
-                              userInfo:@{NSLocalizedDescriptionKey : message}]);
+      if (failure) failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
+                                               code:0
+                                           userInfo:@{NSLocalizedDescriptionKey : message}]);
     }
   };
 }
@@ -304,6 +304,45 @@
   [self enumerateGroupsWithTypes:ALAssetsGroupAlbum
                       usingBlock:enumerationBlock
                     failureBlock:failure];
+}
+
+- (void)loadAssetsForProperty:(NSString *)property
+                    fromAlbum:(NSString *)albumName
+                   completion:(void (^)(NSMutableArray *, NSError *))completion
+{
+  ALAssetsLibraryGroupsEnumerationResultsBlock block = ^(ALAssetsGroup *group, BOOL *stop) {
+    // Checking if library exists
+    if (group == nil) {
+      *stop = YES;
+      return;
+    }
+    
+    // If we have found library with given title we enumerate it
+    if ([albumName compare:[group valueForProperty:ALAssetsGroupPropertyName]] == NSOrderedSame) {
+      NSMutableArray * array = [[NSMutableArray alloc] init];
+      [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+        // Checking if group isn't empty
+        if (! result) return;
+        
+        [array addObject:(property ? ([result valueForProperty:property] ?: [NSNull null]) : result)];
+      }];
+      
+      // Execute the |completion| block
+      if (completion) completion(array, nil);
+      
+      // Album was found, bail out of the method
+      *stop = YES;
+    }
+  };
+  
+  ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error) {
+    NSLog(@"%s: %@", __PRETTY_FUNCTION__, [error localizedDescription]);
+    if (completion) completion(nil, error);
+  };
+  
+  [self enumerateGroupsWithTypes:ALAssetsGroupAll
+                      usingBlock:block
+                    failureBlock:failureBlock];
 }
 
 - (void)loadImagesFromAlbum:(NSString *)albumName
