@@ -6,6 +6,7 @@
 //
 
 #import "ALAssetsLibrary+CustomPhotoAlbum.h"
+#import <Photos/Photos.h>
 
 #if !__has_feature(objc_arc)
 #error This class requires automatic reference counting (ARC).
@@ -290,9 +291,15 @@
           // code that always creates an album on iOS 7.x.x but fails
           // in certain situations such as if album has been deleted
           // previously on iOS 8.x.
-          [self addAssetsGroupAlbumWithName:albumName
-                                resultBlock:addPhotoToLibraryBlock
-                               failureBlock:failure];
+            [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^
+             {
+                 [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:albumName];
+             } completionHandler:^(BOOL success, NSError *error)
+             {
+                 if (!success) {
+                     NSLog(@"Error creating album: %@", error);
+                 }
+             }];
         }
       }
       // Should be the last iteration anyway, but just in case
