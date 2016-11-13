@@ -65,5 +65,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>${PRODUCT_NAME} uses camera to take photo for record.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>${PRODUCT_NAME} uses photos for record.</string>
 </dict>
 </plist>
