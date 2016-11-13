@@ -61,10 +61,13 @@
   [takePhotoButton setStyle:UIBarButtonItemStyleBordered];
   [self.navigationItem setRightBarButtonItem:takePhotoButton];
   
+  self.photoURLs = [NSMutableArray array];
   [self.assetsLibrary loadAssetsForProperty:ALAssetPropertyAssetURL
                                   fromAlbum:kKYCustomPhotoAlbumName_
                                  completion:^(NSMutableArray *array, NSError *error) {
-                                   self.photoURLs = (array ?: [NSMutableArray array]);
+                                   if (array) {
+                                     [self.photoURLs addObjectsFromArray:array];
+                                   }
                                    [self.tableView reloadData];
                                  }];
   
