@@ -102,6 +102,14 @@
   return assetsLibrary_;
 }
 
+-(NSMutableArray *)photoURLs
+{
+    if(!photoURLs_) {
+        photoURLs_ = [[NSMutableArray alloc] init];
+    }
+    return photoURLs_;
+}
+
 #pragma mark - Table view data source
 
 // Return the number of sections.
