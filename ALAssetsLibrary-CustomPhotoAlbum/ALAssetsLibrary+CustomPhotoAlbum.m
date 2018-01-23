@@ -76,18 +76,58 @@
                                                                   failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
   return ^(ALAsset *asset) {
-    // Add photo to the target album
-    if ([group addAsset:asset]) {
-      // Run the completion block if the asset was added successfully
-      if (completion) completion(assetURL, nil);
-    }
-    // |-addAsset:| may fail (return NO) if the group is not editable,
-    //   or if the asset could not be added to the group.
-    else {
-      NSString * message = [NSString stringWithFormat:@"ALAssetsGroup failed to add asset: %@.", asset];
-      if (failure) failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
-                                               code:0
-                                           userInfo:@{NSLocalizedDescriptionKey : message}]);
+    void (^addAssetToGroup)(ALAsset *) = ^(ALAsset *assetToAdd) {
+      // Add photo to the target album
+      if (assetToAdd && [group addAsset:assetToAdd]) {
+        // Run the completion block if the asset was added successfully
+        if (completion) completion(assetURL, nil);
+      }
+      // |-addAsset:| may fail (return NO) if the group is not editable,
+      //   or if the asset could not be added to the group.
+      else {
+        NSString *message = [NSString stringWithFormat:@"ALAssetsGroup failed to add asset: %@.", asset];
+        if (failure) failure([NSError errorWithDomain:@"LIB_ALAssetsLibrary_CustomPhotoAlbum"
+                                                 code:0
+                                             userInfo:@{NSLocalizedDescriptionKey : message}]);
+      }
+    };
+    
+    if (asset) {
+      addAssetToGroup(asset);
+    } else {
+      /*
+       The `-assetForURL:resultBlock:failureBlock` might return nil asset in `resultBlock`
+         since the SDK introduced Photos.framework. So in this case, we need to get it
+         manually by comparing the asset one by one. It will take some time, so it's
+         better to use Photos.framework to handle related tasks.
+       
+       Related Topic:
+       https://github.com/Kjuly/ALAssetsLibrary-CustomPhotoAlbum/issues/50#issuecomment-357687126
+       https://stackoverflow.com/questions/26480526/alassetslibrary-assetforurl-always-returning-nil-for-photos-in-my-photo-stream
+       */
+      [self enumerateGroupsWithTypes:ALAssetsGroupAll
+                          usingBlock:^(ALAssetsGroup *groupToCheck, BOOL *stopToEnumerateGroups) {
+                            // `group` is our target to add the asset, no need to check assets there.
+                            if (groupToCheck == group) {
+                              return;
+                            }
+                            
+                            BOOL __block foundAsset = NO;
+                            [groupToCheck enumerateAssetsWithOptions:NSEnumerationReverse
+                                                          usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stopToEnumerateAssets) {
+                                                            if ([result.defaultRepresentation.url isEqual:assetURL]) {
+                                                              foundAsset = YES;
+                                                              addAssetToGroup(result);
+                                                              *stopToEnumerateAssets = YES;
+                                                            }
+                                                          }];
+                            if (foundAsset) {
+                              *stopToEnumerateGroups = YES;
+                            }
+                          }
+                        failureBlock:^(NSError *error) {
+                          NSLog(@"%s: Cannot load asset from photo stream, error: %@", __PRETTY_FUNCTION__, [error localizedDescription]);
+                        }];
     }
   };
 }

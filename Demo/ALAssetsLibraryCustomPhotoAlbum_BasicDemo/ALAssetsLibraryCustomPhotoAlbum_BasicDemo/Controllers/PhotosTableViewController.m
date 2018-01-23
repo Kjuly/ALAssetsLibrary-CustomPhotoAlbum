@@ -240,6 +240,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
       if (error) {
         NSLog(@"%s: Write the image data to the assets library (camera roll): %@",
               __PRETTY_FUNCTION__, [error localizedDescription]);
+        return;
       }
       
       NSLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
